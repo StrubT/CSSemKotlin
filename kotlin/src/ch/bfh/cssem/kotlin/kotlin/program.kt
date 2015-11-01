@@ -30,3 +30,18 @@ public fun main(args: Array<String>) {
 
 	users.forEach { println(it) }
 }
+
+/* BASIC SYNTAX
+ * packages
+ * functions
+ * local variables
+ * string templates
+ * conditional expressions
+ * nullable values and checking for null
+ * type checks and automatic casts
+ * for loop
+ * while loop
+ * when expression
+ * ranges
+ * collections
+ */
