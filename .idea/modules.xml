@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/api-kotlin/api-kotlin.iml" filepath="$PROJECT_DIR$/api-kotlin/api-kotlin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app-java/app-java.iml" filepath="$PROJECT_DIR$/app-java/app-java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app-kotlin/app-kotlin.iml" filepath="$PROJECT_DIR$/app-kotlin/app-kotlin.iml" />
       <module fileurl="file://$PROJECT_DIR$/examples.iml" filepath="$PROJECT_DIR$/examples.iml" />
-      <module fileurl="file://$PROJECT_DIR$/java/java.iml" filepath="$PROJECT_DIR$/java/java.iml" />
-      <module fileurl="file://$PROJECT_DIR$/kotlin/kotlin.iml" filepath="$PROJECT_DIR$/kotlin/kotlin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jpa-kotlin/jpa-kotlin.iml" filepath="$PROJECT_DIR$/jpa-kotlin/jpa-kotlin.iml" />
     </modules>
   </component>
 </project>
