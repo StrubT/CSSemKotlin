@@ -1,8 +1,6 @@
 package ch.bfh.cssem.kotlin.api
 
-public interface Person {
-
-	val id: Int
+interface Person {
 
 	var lastName: String
 
@@ -12,9 +10,13 @@ public interface Person {
 
 	var city: City?
 
-	var email: String?
+	var emailPrivate: String?
 
-	var phonePrivate: String?
+	var emailWork: String?
+
+	var phoneHome: String?
+
+	var phoneMobile: String?
 
 	var phoneWork: String?
 }

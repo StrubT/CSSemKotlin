@@ -17,7 +17,7 @@ public final class Program {
 			throw new IllegalArgumentException("No command-line arguments supported!");
 
 		AddressBook book = Program.getServiceImplementation(AddressBook.class);
-		book.getPeople().forEach(System.out::println);
+		book.fetchAllPeople().forEach(System.out::println);
 	}
 
 	private static <T> T getServiceImplementation(Class<T> type) {

@@ -1,12 +1,12 @@
 package ch.bfh.cssem.kotlin.api
 
-interface Country {
+interface State {
 
 	var abbreviation: String
 
 	var name: String
 
-	val states: List<State>
+	var country: Country
 
 	val cities: List<City>
 }

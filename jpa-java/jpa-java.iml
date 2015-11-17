@@ -6,7 +6,6 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="EclipseLink" />
         <datasource-mapping>
-          <factory-entry name="AddressBook" />
           <factory-entry name="NewPersistenceUnit" />
         </datasource-mapping>
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/META-INF/persistence.xml" />
@@ -20,10 +19,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="JPA 2.0-2.0" level="project" />
-    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
-    <orderEntry type="module" module-name="api-kotlin" />
-    <orderEntry type="library" name="mysql:mysql-connector-java:5.1.37" level="project" />
     <orderEntry type="library" name="org.eclipse.persistence:eclipselink:2.6.1" level="project" />
+    <orderEntry type="library" name="JPA 2.0-2.0" level="project" />
+    <orderEntry type="library" name="mysql:mysql-connector-java:5.1.37" level="project" />
+    <orderEntry type="module" module-name="api-kotlin" />
   </component>
 </module>
