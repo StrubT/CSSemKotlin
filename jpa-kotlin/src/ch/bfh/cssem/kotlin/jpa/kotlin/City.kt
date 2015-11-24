@@ -8,6 +8,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+import javax.persistence.NamedQueries
 import javax.persistence.NamedQuery
 import javax.persistence.OneToMany
 import javax.persistence.Table
@@ -16,11 +17,21 @@ import ch.bfh.cssem.kotlin.api.Country as ApiCountry
 import ch.bfh.cssem.kotlin.api.Person as ApiPerson
 import ch.bfh.cssem.kotlin.api.State as ApiState
 
-internal const val CITY_FIND_BY_NAME = "CITY_FIND_BY_NAME"
-
+/**
+ * Represents a [City][ch.bfh.cssem.kotlin.api.City] implementation using the [Java Persistence API](http://www.oracle.com/technetwork/java/javaee/tech/persistence-jsp-140049.html).
+ *
+ * @property stateJpa   optional state the city belongs to (typed to the specific entity class)
+ * @property countryJpa country the city belongs to (typed to the specific entity class)
+ * @property peopleJpa  [List] of people living in the city (typed to the specific entity class)
+ *
+ * @constructor Constructs a new city entity with the provided properties.
+ *
+ * @author strut1 & touwm1
+ */
 @Entity
 @Table(name = "cities")
-@NamedQuery(name = CITY_FIND_BY_NAME, query = "select c from City c where c.name like :name")
+@NamedQueries(NamedQuery(name = City.FIND_BY_NAME, query = "select c from City c where c.name like :name"),
+							NamedQuery(name = City.FIND_BY_POSTAL_CODE, query = "select c from City c where c.postalCode like :postalCode"))
 data class City(
 
 	@Column(name = "name")
@@ -35,8 +46,11 @@ data class City(
 
 	@ManyToOne(optional = true, fetch = FetchType.EAGER)
 	@JoinColumn(name = "country")
-	internal var countryJpa: Country) : ApiCity, PersistenceObject {
+	internal var countryJpa: Country) : ApiCity, PersistentEntity {
 
+	/**
+	 * Constructs a new empty city entity.
+	 */
 	protected constructor() : this("", "", State.UNDEF, Country.UNDEF)
 
 	@Id
@@ -47,7 +61,7 @@ data class City(
 		internal set
 
 	@OneToMany(mappedBy = "cityJpa", fetch = FetchType.LAZY)
-	internal var peopleJpa: List<Person> = listOf()
+	internal lateinit var peopleJpa: List<Person>
 
 	override var state: ApiState?
 		get() = stateJpa
@@ -65,6 +79,9 @@ data class City(
 		get() = peopleJpa
 
 	companion object {
+
+		internal const val FIND_BY_NAME = "City.FIND_BY_NAME"
+		internal const val FIND_BY_POSTAL_CODE = "City.FIND_BY_POSTAL_CODE"
 
 		internal val UNDEF = City()
 	}

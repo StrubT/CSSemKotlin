@@ -14,13 +14,19 @@ import javax.persistence.Table
 import ch.bfh.cssem.kotlin.api.City as ApiCity
 import ch.bfh.cssem.kotlin.api.Person as ApiPerson
 
-internal const val PERSON_FIND_BY_NAME = "PERSON_FIND_BY_NAME"
-internal const val PERSON_FIND_BY_EMAIL = "PERSON_FIND_BY_EMAIL"
-
+/**
+ * Represents a [Person][ch.bfh.cssem.kotlin.api.Person] implementation using the [Java Persistence API](http://www.oracle.com/technetwork/java/javaee/tech/persistence-jsp-140049.html).
+ *
+ * @property cityJpa optional city of the person's postal address (typed to the specific entity class)
+ *
+ * @constructor Constructs a new person entity with the provided properties.
+ *
+ * @author strut1 & touwm1
+ */
 @Entity
 @Table(name = "people")
-@NamedQueries(NamedQuery(name = PERSON_FIND_BY_NAME, query = "select p from Person p where p.firstName like :name or p.lastName like :name"),
-							NamedQuery(name = PERSON_FIND_BY_EMAIL, query = "select p from Person p where p.emailPrivate = :email or p.emailWork = :email"))
+@NamedQueries(NamedQuery(name = Person.FIND_BY_NAME, query = "select p from Person p where p.firstName like :name or p.lastName like :name"),
+							NamedQuery(name = Person.FIND_BY_EMAIL, query = "select p from Person p where p.emailPrivate = :email or p.emailWork = :email"))
 data class Person(
 
 	@Column(name = "lastname")
@@ -49,8 +55,11 @@ data class Person(
 	override var phoneMobile: String? = null,
 
 	@Column(name = "phonework")
-	override var phoneWork: String? = null) : ApiPerson, PersistenceObject {
+	override var phoneWork: String? = null) : ApiPerson, PersistentEntity {
 
+	/**
+	 * Constructs a new empty person entity.
+	 */
 	protected constructor() : this("", "")
 
 	@Id
@@ -67,6 +76,9 @@ data class Person(
 		}
 
 	companion object {
+
+		internal const val FIND_BY_NAME = "Person.FIND_BY_NAME"
+		internal const val FIND_BY_EMAIL = "Person.FIND_BY_EMAIL"
 
 		internal val UNDEF = Person()
 	}

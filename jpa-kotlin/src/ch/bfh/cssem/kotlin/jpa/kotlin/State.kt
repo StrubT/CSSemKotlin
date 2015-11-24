@@ -15,11 +15,19 @@ import ch.bfh.cssem.kotlin.api.City as ApiCity
 import ch.bfh.cssem.kotlin.api.Country as ApiCountry
 import ch.bfh.cssem.kotlin.api.State as ApiState
 
-internal const val STATE_FIND_BY_NAME = "STATE_FIND_BY_NAME"
-
+/**
+ * Represents a [State][ch.bfh.cssem.kotlin.api.State] implementation using the [Java Persistence API](http://www.oracle.com/technetwork/java/javaee/tech/persistence-jsp-140049.html).
+ *
+ * @property country country the state belongs to (typed to the specific entity class)
+ * @property cities  [List] of cities in the state (typed to the specific entity class)
+ *
+ * @constructor Constructs a new state entity with the provided properties.
+ *
+ * @author strut1 & touwm1
+ */
 @Entity
 @Table(name = "states")
-@NamedQuery(name = STATE_FIND_BY_NAME, query = "select s from State s where s.name like :name")
+@NamedQuery(name = State.FIND_BY_NAME, query = "select s from State s where s.name like :name")
 data class State(
 
 	@Column(name = "abbreviation")
@@ -30,8 +38,11 @@ data class State(
 
 	@ManyToOne(optional = true, fetch = FetchType.EAGER)
 	@JoinColumn(name = "country")
-	internal var countryJpa: Country) : ApiState, PersistenceObject {
+	internal var countryJpa: Country) : ApiState, PersistentEntity {
 
+	/**
+	 * Constructs a new empty state entity.
+	 */
 	protected constructor() : this("", "", Country.UNDEF)
 
 	@Id
@@ -42,7 +53,7 @@ data class State(
 		internal set
 
 	@OneToMany(mappedBy = "stateJpa", fetch = FetchType.LAZY)
-	internal var citiesJpa: List<City> = listOf()
+	internal lateinit var citiesJpa: List<City>
 
 	override var country: ApiCountry
 		get() = countryJpa
@@ -54,6 +65,8 @@ data class State(
 		get() = citiesJpa
 
 	companion object {
+
+		internal const val FIND_BY_NAME = "State.FIND_BY_NAME"
 
 		internal val UNDEF = State()
 	}

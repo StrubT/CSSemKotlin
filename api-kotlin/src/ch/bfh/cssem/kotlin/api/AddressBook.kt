@@ -24,7 +24,7 @@ interface AddressBook {
 	fun fetchPeopleByName(filter: String): List<Person>
 
 	/**
-	 * Fetches the person with the specified [Person.email] from the data source.
+	 * Fetches the person with the specified [Person.emailPrivate] or [Person.emailWork] from the data source.
 	 *
 	 * @param email the e-mail address to search for
 	 *
@@ -65,6 +65,15 @@ interface AddressBook {
 	 * @return a [List] containing the matching [City] objects
 	 */
 	fun fetchCitiesByName(filter: String): List<City>
+
+	/**
+	 * Fetches all cities with a [City.postalCode] matching the provided filter from the data source.
+	 *
+	 * @param filter the filter to match the postal codes against
+	 *
+	 * @return a [List] containing the matching [City] objects
+	 */
+	fun fetchCitiesByPostalCode(filter: String): List<City>
 
 	/**
 	 * Fetches all states from the data source.

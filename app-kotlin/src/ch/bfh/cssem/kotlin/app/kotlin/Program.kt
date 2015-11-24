@@ -3,6 +3,11 @@ package ch.bfh.cssem.kotlin.app.kotlin
 import ch.bfh.cssem.kotlin.api.AddressBook
 import java.util.ServiceLoader
 
+/**
+ * Entry point to the application.
+ *
+ * @param args command-line arguments (none supported)
+ */
 fun main(vararg args: String) {
 
 	if (args.size > 0)
