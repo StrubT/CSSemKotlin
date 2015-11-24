@@ -13,42 +13,42 @@ fun main(vararg args: String) {
 }
 
 /* BASIC SYNTAX
- * packages
- * functions
- * local variables
- * string templates
- * conditional expressions
- * nullable values and checking for null
- * type checks and automatic casts
- * for loop
- * while loop
- * when expression
- * ranges
- * collections
+ * [_] packages
+ * [_] functions
+ * [_] local variables
+ * [_] string templates
+ * [_] conditional expressions
+ * [_] nullable values and checking for null
+ * [_] type checks and automatic casts
+ * [_] for loop
+ * [_] while loop
+ * [_] when expression
+ * [_] ranges
+ * [_] collections
  *
  * IDIOMS
- * Creating DTOs (POJOs/POCOs)
- * Default values for function parameters
- * Filtering a list
- * String Interpolation
- * Instance Checks
- * Traversing a map/list of pairs
- * Using ranges
- * Read-only list
- * Read-only map
- * Accessing a map
- * Lazy property
- * Extension Functions
- * Creating a singleton
- * If not null shorthand
- * If not null and else shorthand
- * Executing a statement if null
- * Execute if not null
- * Return on when statement
- * 'try/catch' expression
- * 'if' expression
- * Builder-style usage of methods that return Unit
- * Single-expression functions
- * Calling multiple methods on an object instance ('with')
- * Java 7's try with resources
+ * [_] Creating DTOs (POJOs/POCOs)
+ * [_] Default values for function parameters
+ * [_] Filtering a list
+ * [_] String Interpolation
+ * [_] Instance Checks
+ * [_] Traversing a map/list of pairs
+ * [_] Using ranges
+ * [_] Read-only list
+ * [_] Read-only map
+ * [_] Accessing a map
+ * [_] Lazy property
+ * [_] Extension Functions
+ * [_] Creating a singleton
+ * [_] If not null shorthand
+ * [_] If not null and else shorthand
+ * [_] Executing a statement if null
+ * [_] Execute if not null
+ * [_] Return on when statement
+ * [_] 'try/catch' expression
+ * [_] 'if' expression
+ * [_] Builder-style usage of methods that return Unit
+ * [_] Single-expression functions
+ * [_] Calling multiple methods on an object instance ('with')
+ * [_] Java 7's try with resources
  */

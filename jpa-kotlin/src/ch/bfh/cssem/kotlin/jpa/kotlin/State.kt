@@ -1,6 +1,5 @@
 package ch.bfh.cssem.kotlin.jpa.kotlin
 
-import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -29,7 +28,7 @@ data class State(
 	@Column(name = "name")
 	override var name: String,
 
-	@ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST, CascadeType.MERGE))
+	@ManyToOne(optional = true, fetch = FetchType.EAGER)
 	@JoinColumn(name = "country")
 	internal var countryJpa: Country) : ApiState, PersistenceObject {
 
@@ -42,7 +41,7 @@ data class State(
 		get
 		internal set
 
-	@OneToMany(mappedBy = "stateJpa", fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.REMOVE), orphanRemoval = true)
+	@OneToMany(mappedBy = "stateJpa", fetch = FetchType.LAZY)
 	internal var citiesJpa: List<City> = listOf()
 
 	override var country: ApiCountry

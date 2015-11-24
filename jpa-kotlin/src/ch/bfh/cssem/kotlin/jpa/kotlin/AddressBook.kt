@@ -77,21 +77,21 @@ class AddressBook : ApiAddressBook {
 
 	override fun createCountry(abbreviation: String, name: String) = Country(abbreviation, name)
 
-	override fun savePerson(person: ApiPerson) = persistMerge(person as Person)
+	override fun storePerson(person: ApiPerson) = persistMerge(person as Person)
 
-	override fun saveCity(city: ApiCity) = persistMerge(city as City)
+	override fun storeCity(city: ApiCity) = persistMerge(city as City)
 
-	override fun saveState(state: ApiState) = persistMerge(state as State)
+	override fun storeState(state: ApiState) = persistMerge(state as State)
 
-	override fun saveCountry(country: ApiCountry) = persistMerge(country as Country)
+	override fun storeCountry(country: ApiCountry) = persistMerge(country as Country)
 
-	override fun deletePerson(person: ApiPerson) = remove(person)
+	override fun removePerson(person: ApiPerson) = remove(person)
 
-	override fun deleteCity(city: ApiCity) = remove(city)
+	override fun removeCity(city: ApiCity) = remove(city)
 
-	override fun deleteState(state: ApiState) = remove(state)
+	override fun removeState(state: ApiState) = remove(state)
 
-	override fun deleteCountry(country: ApiCountry) = remove(country)
+	override fun removeCountry(country: ApiCountry) = remove(country)
 }
 
 fun String.makeFilter() = "%${this.replace(Regex("/[^A-Z0-9]+/", RegexOption.IGNORE_CASE), "%").trim('%')}%"

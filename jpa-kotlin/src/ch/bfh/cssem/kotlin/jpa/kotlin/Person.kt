@@ -1,6 +1,5 @@
 package ch.bfh.cssem.kotlin.jpa.kotlin
 
-import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -33,7 +32,7 @@ data class Person(
 	@Column(name = "addrstreet")
 	override var street: String? = null,
 
-	@ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST, CascadeType.MERGE))
+	@ManyToOne(optional = true, fetch = FetchType.EAGER)
 	@JoinColumn(name = "addrcity")
 	internal var cityJpa: City? = null,
 

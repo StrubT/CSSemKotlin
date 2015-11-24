@@ -32,11 +32,11 @@ USE `addressbook`;
 
 DROP TABLE IF EXISTS `cities`;
 CREATE TABLE IF NOT EXISTS `cities` (
-	`id`           INT(11)     NOT NULL,
-	`name`         VARCHAR(50) NOT NULL,
-	`postalcode`   VARCHAR(10) NOT NULL,
-	`state`        INT(11) DEFAULT NULL,
-	`country`      INT(11)     NOT NULL
+	`id`         INT(11)     NOT NULL,
+	`name`       VARCHAR(50) NOT NULL,
+	`postalcode` VARCHAR(10) NOT NULL,
+	`state`      INT(11) DEFAULT NULL,
+	`country`    INT(11)     NOT NULL
 )
 	ENGINE = InnoDB
 	DEFAULT CHARSET = utf8;

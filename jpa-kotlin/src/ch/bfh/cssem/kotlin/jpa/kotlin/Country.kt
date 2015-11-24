@@ -1,6 +1,5 @@
 package ch.bfh.cssem.kotlin.jpa.kotlin
 
-import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -21,11 +20,11 @@ internal const val COUNTRY_FIND_BY_NAME = "COUNTRY_FIND_BY_NAME"
 @NamedQuery(name = COUNTRY_FIND_BY_NAME, query = "select c from Country c where c.name like :name")
 data class Country(
 
-		@Column(name = "abbreviation")
-		override var abbreviation: String,
+	@Column(name = "abbreviation")
+	override var abbreviation: String,
 
-		@Column(name = "name")
-		override var name: String) : ApiCountry, PersistenceObject {
+	@Column(name = "name")
+	override var name: String) : ApiCountry, PersistenceObject {
 
 	protected constructor() : this("", "")
 
@@ -36,10 +35,10 @@ data class Country(
 		get
 		internal set
 
-	@OneToMany(mappedBy = "countryJpa", fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.REMOVE), orphanRemoval = true)
+	@OneToMany(mappedBy = "countryJpa", fetch = FetchType.LAZY)
 	internal var statesJpa: List<State> = listOf()
 
-	@OneToMany(mappedBy = "countryJpa", fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.REMOVE), orphanRemoval = true)
+	@OneToMany(mappedBy = "countryJpa", fetch = FetchType.LAZY)
 	internal var citiesJpa: List<City> = listOf()
 
 	override val states: List<ApiState>
