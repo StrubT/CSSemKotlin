@@ -17,11 +17,11 @@ import ch.bfh.cssem.kotlin.api.Person as ApiPerson
 /**
  * Represents a [Person][ch.bfh.cssem.kotlin.api.Person] implementation using the [Java Persistence API](http://www.oracle.com/technetwork/java/javaee/tech/persistence-jsp-140049.html).
  *
- * @property cityJpa optional city of the person's postal address (typed to the specific entity class)
+ * @author strut1 & touwm1
  *
  * @constructor Constructs a new person entity with the provided properties.
  *
- * @author strut1 & touwm1
+ * @property cityJpa optional city of the person's postal address (typed to the specific entity class)
  */
 @Entity
 @Table(name = "people")

@@ -18,12 +18,12 @@ import ch.bfh.cssem.kotlin.api.State as ApiState
 /**
  * Represents a [State][ch.bfh.cssem.kotlin.api.State] implementation using the [Java Persistence API](http://www.oracle.com/technetwork/java/javaee/tech/persistence-jsp-140049.html).
  *
- * @property country country the state belongs to (typed to the specific entity class)
- * @property cities  [List] of cities in the state (typed to the specific entity class)
+ * @author strut1 & touwm1
  *
  * @constructor Constructs a new state entity with the provided properties.
  *
- * @author strut1 & touwm1
+ * @property country country the state belongs to (typed to the specific entity class)
+ * @property cities  [List] of cities in the state (typed to the specific entity class)
  */
 @Entity
 @Table(name = "states")

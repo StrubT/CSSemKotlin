@@ -3,6 +3,8 @@ package ch.bfh.cssem.kotlin.api
 /**
  * Represents the API of a person.
  *
+ * @author strut1 & touwm1
+ *
  * @property lastName     last (family) name of the person
  * @property firstName    first (given) name of the person
  * @property street       optional street part of the person's postal address
@@ -12,8 +14,6 @@ package ch.bfh.cssem.kotlin.api
  * @property phoneHome    optional private fixed line telephone number of the person
  * @property phoneMobile  optional private mobile (cell) telephone number of the person
  * @property phoneWork    optional work (business) telephone number of the person
- *
- * @author strut1 & touwm1
  */
 interface Person {
 
