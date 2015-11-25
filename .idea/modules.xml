@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/examples.iml" filepath="$PROJECT_DIR$/examples.iml" />
       <module fileurl="file://$PROJECT_DIR$/jpa-java/jpa-java.iml" filepath="$PROJECT_DIR$/jpa-java/jpa-java.iml" />
       <module fileurl="file://$PROJECT_DIR$/jpa-kotlin/jpa-kotlin.iml" filepath="$PROJECT_DIR$/jpa-kotlin/jpa-kotlin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/js-kotlin/js-kotlin.iml" filepath="$PROJECT_DIR$/js-kotlin/js-kotlin.iml" />
     </modules>
   </component>
 </project>
