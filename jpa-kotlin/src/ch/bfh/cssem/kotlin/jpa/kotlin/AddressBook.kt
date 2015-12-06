@@ -17,7 +17,7 @@ import ch.bfh.cssem.kotlin.api.State as ApiState
 class AddressBook : ApiAddressBook {
 
 	/**
-	 * JPA [EntityManager][javax.persistence.EntityManager] to use
+	 * JPA [EntityManager][javax.persistence.EntityManager] to use.
 	 */
 	protected val entityManager = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT).createEntityManager()
 

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+						fx:controller="ch.bfh.cssem.kotlin.app.kotlin.FXWindow"
+						fx:id="rootPane"
+						minHeight="500.0" minWidth="700.0"
+						prefHeight="650.0" prefWidth="800.0">
+	<top>
+		<Label fx:id="titleLabel" styleClass="h1" text="CSSem - Address Book in Kotlin" BorderPane.alignment="CENTER" />
+	</top>
+	<center>
+		<TabPane fx:id="tabPane">
+			<Tab fx:id="peopleTab" text="People" closable="false">
+				<TableView fx:id="peopleTable">
+					<columns>
+						<TableColumn text="First Name">
+							<cellValueFactory>
+								<PropertyValueFactory property="firstName" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Last Name">
+							<cellValueFactory>
+								<PropertyValueFactory property="lastName" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Street">
+							<cellValueFactory>
+								<PropertyValueFactory property="street" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Address">
+							<cellValueFactory>
+								<PropertyValueFactory property="address" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="E-Mail Address/es">
+							<cellValueFactory>
+								<PropertyValueFactory property="email" />
+							</cellValueFactory>
+						</TableColumn>
+						<TableColumn text="Telephone Number/s">
+							<cellValueFactory>
+								<PropertyValueFactory property="phone" />
+							</cellValueFactory>
+						</TableColumn>
+					</columns>
+				</TableView>
+			</Tab>
+		</TabPane>
+	</center>
+</BorderPane>
