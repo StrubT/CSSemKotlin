@@ -27,7 +27,7 @@ import ch.bfh.cssem.kotlin.api.State as ApiState
  */
 @Entity
 @Table(name = "states")
-@NamedQuery(name = State.FIND_BY_NAME, query = "select s from State s where s.name like :name")
+@NamedQuery(name = State.findByName, query = "select s from State s where s.name like :name")
 data class State(
 
 	@Column(name = "abbreviation")
@@ -43,7 +43,7 @@ data class State(
 	/**
 	 * Constructs a new empty state entity.
 	 */
-	protected constructor() : this("", "", Country.UNDEF)
+	protected constructor() : this("", "", Country.undef)
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,8 +66,8 @@ data class State(
 
 	companion object {
 
-		internal const val FIND_BY_NAME = "State.FIND_BY_NAME"
+		internal const val findByName = "State.findByName"
 
-		internal val UNDEF = State()
+		internal val undef = State()
 	}
 }

@@ -11,6 +11,8 @@ import javafx.stage.Stage
  * Entry point to the application.
  *
  * @param args command-line arguments (none supported)
+ *
+ * @author strut1 & touwm1
  */
 fun main(vararg args: String) {
 
@@ -20,6 +22,11 @@ fun main(vararg args: String) {
 	Application.launch(FXApplication::class.java, *args)
 }
 
+/**
+ * Contains the logic to start the JavaFX [Application].
+ *
+ * @author strut1 & touwm1
+ */
 class FXApplication() : Application() {
 
 	override fun start(primaryStage: Stage) {

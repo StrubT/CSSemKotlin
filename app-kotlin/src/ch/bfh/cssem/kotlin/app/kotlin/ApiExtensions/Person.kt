@@ -4,6 +4,24 @@ import ch.bfh.cssem.kotlin.api.Country
 import ch.bfh.cssem.kotlin.api.Person
 import ch.bfh.cssem.kotlin.api.State
 
+/**
+ * Special JavaFX implementation of the interface [Person].
+ *
+ * @property impl                    concrete implementation of the interface
+ * @property cityPostalCode          the city's postal code
+ * @property cityName                the city's name
+ * @property cityState               the city's state
+ * @property cityStateAbbreviation   the state's abbreviation
+ * @property cityStateName           the state's name
+ * @property cityCountry             the city's (state's) country
+ * @property cityCountryAbbreviation the country's abbreviation
+ * @property cityCountryName         the country's name
+ * @property address                 concatenated postal address information
+ * @property email                   concatenated e-mail addresses
+ * @property phone                   concatenated telephone number
+ *
+ * @author strut1 & touwm1
+ */
 class FXPerson(val impl: Person) : Person by impl {
 
 	val cityPostalCode: String?

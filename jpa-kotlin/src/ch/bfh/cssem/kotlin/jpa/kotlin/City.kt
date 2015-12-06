@@ -30,8 +30,8 @@ import ch.bfh.cssem.kotlin.api.State as ApiState
  */
 @Entity
 @Table(name = "cities")
-@NamedQueries(NamedQuery(name = City.FIND_BY_NAME, query = "select c from City c where c.name like :name"),
-							NamedQuery(name = City.FIND_BY_POSTAL_CODE, query = "select c from City c where c.postalCode like :postalCode"))
+@NamedQueries(NamedQuery(name = City.findByName, query = "select c from City c where c.name like :name"),
+							NamedQuery(name = City.findByPostalCode, query = "select c from City c where c.postalCode like :postalCode"))
 data class City(
 
 	@Column(name = "name")
@@ -51,7 +51,7 @@ data class City(
 	/**
 	 * Constructs a new empty city entity.
 	 */
-	protected constructor() : this("", "", State.UNDEF, Country.UNDEF)
+	protected constructor() : this("", "", State.undef, Country.undef)
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -80,9 +80,9 @@ data class City(
 
 	companion object {
 
-		internal const val FIND_BY_NAME = "City.FIND_BY_NAME"
-		internal const val FIND_BY_POSTAL_CODE = "City.FIND_BY_POSTAL_CODE"
+		internal const val findByName = "City.findByName"
+		internal const val findByPostalCode = "City.findByPostalCode"
 
-		internal val UNDEF = City()
+		internal val undef = City()
 	}
 }

@@ -19,7 +19,7 @@ class AddressBook : ApiAddressBook {
 	/**
 	 * JPA [EntityManager][javax.persistence.EntityManager] to use.
 	 */
-	protected val entityManager = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT).createEntityManager()
+	protected val entityManager = Persistence.createEntityManagerFactory(persistenceUnit).createEntityManager()
 
 	/**
 	 * Finds a [PersistentEntity] in the [entityManager] by its unique identifier.
@@ -97,9 +97,9 @@ class AddressBook : ApiAddressBook {
 
 	override fun fetchAllPeople() = findAll<Person>()
 
-	override fun fetchPeopleByName(filter: String) = findByQuery<Person>(Person.FIND_BY_NAME, mapOf("name" to filter.makeFilter()))
+	override fun fetchPeopleByName(filter: String) = findByQuery<Person>(Person.findByName, mapOf("name" to filter.makeFilter()))
 
-	override fun fetchPersonByEmail(email: String) = findByQuery<Person>(Person.FIND_BY_EMAIL, mapOf("email" to email)).singleOrNull()
+	override fun fetchPersonByEmail(email: String) = findByQuery<Person>(Person.findByEMail, mapOf("email" to email)).singleOrNull()
 
 	override fun fetchAllCities() = findAll<City>()
 
@@ -107,19 +107,19 @@ class AddressBook : ApiAddressBook {
 
 	override fun fetchAllCitiesInCountry(country: ApiCountry) = (country as Country).citiesJpa
 
-	override fun fetchCitiesByName(filter: String) = findByQuery<City>(City.FIND_BY_NAME, mapOf("name" to filter.makeFilter()))
+	override fun fetchCitiesByName(filter: String) = findByQuery<City>(City.findByName, mapOf("name" to filter.makeFilter()))
 
-	override fun fetchCitiesByPostalCode(filter: String) = findByQuery<City>(City.FIND_BY_POSTAL_CODE, mapOf("postalCode" to filter.makeFilter()))
+	override fun fetchCitiesByPostalCode(filter: String) = findByQuery<City>(City.findByPostalCode, mapOf("postalCode" to filter.makeFilter()))
 
 	override fun fetchAllStates() = findAll<State>()
 
 	override fun fetchAllStatesInCountry(country: ApiCountry) = (country as Country).statesJpa
 
-	override fun fetchStatesByName(filter: String) = findByQuery<State>(State.FIND_BY_NAME, mapOf("name" to filter.makeFilter()))
+	override fun fetchStatesByName(filter: String) = findByQuery<State>(State.findByName, mapOf("name" to filter.makeFilter()))
 
 	override fun fetchAllCountries() = findAll<Country>()
 
-	override fun fetchCountriesByName(filter: String) = findByQuery<Country>(Country.FIND_BY_NAME, mapOf("name" to filter.makeFilter()))
+	override fun fetchCountriesByName(filter: String) = findByQuery<Country>(Country.findByName, mapOf("name" to filter.makeFilter()))
 
 	override fun createPerson(lastName: String, firstName: String) = Person(lastName, firstName)
 
@@ -147,7 +147,10 @@ class AddressBook : ApiAddressBook {
 
 	companion object {
 
-		internal const val PERSISTENCE_UNIT = "AddressBook"
+		/**
+		 * Name of the [javax.persistence.PersistenceUnit] to use
+		 */
+		internal const val persistenceUnit = "AddressBook"
 	}
 }
 

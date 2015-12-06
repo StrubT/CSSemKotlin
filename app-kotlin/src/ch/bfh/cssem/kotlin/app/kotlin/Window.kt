@@ -16,8 +16,22 @@ import java.net.URL
 import java.util.ResourceBundle
 import java.util.ServiceLoader
 
+/**
+ * [AddressBook] instance to use throughout the project.
+ */
 private val addressBook = ServiceLoader.load(AddressBook::class.java).single()
 
+/**
+ * Contains the logic to control the JavaFX [Window][javafx.stage.Window].
+ *
+ * @property rootPane    [FXML] node
+ * @property titleLabel  [FXML] node
+ * @property tabPane     [FXML] node
+ * @property peopleTab   [FXML] node
+ * @property peopleTable [FXML] node
+ *
+ * @author strut1 & touwm1
+ */
 class FXWindow : Initializable {
 
 	@FXML protected lateinit var rootPane: BorderPane
@@ -31,6 +45,9 @@ class FXWindow : Initializable {
 		peopleTable.items = addressBook.fetchAllPeople().map { FXPerson(it) }.toCollection(FXCollections.observableArrayList())
 	}
 
+	/**
+	 * Initialise the [Stage] and [Scene] with data from the [FXML] file.
+	 */
 	fun initialize(stage: Stage, scene: Scene) {
 
 		stage.title = titleLabel.text

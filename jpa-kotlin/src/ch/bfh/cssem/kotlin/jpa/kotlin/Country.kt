@@ -25,7 +25,7 @@ import ch.bfh.cssem.kotlin.api.State as ApiState
  */
 @Entity
 @Table(name = "countries")
-@NamedQuery(name = Country.FIND_BY_NAME, query = "select c from Country c where c.name like :name")
+@NamedQuery(name = Country.findByName, query = "select c from Country c where c.name like :name")
 data class Country(
 
 	@Column(name = "abbreviation")
@@ -60,8 +60,8 @@ data class Country(
 
 	companion object {
 
-		internal const val FIND_BY_NAME = "Country.FIND_BY_NAME"
+		internal const val findByName = "Country.findByName"
 
-		internal val UNDEF = Country()
+		internal val undef = Country()
 	}
 }
