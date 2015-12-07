@@ -1,3 +1,6 @@
+@file:JvmName("Program")
+@file:JvmMultifileClass
+
 package ch.bfh.cssem.kotlin.app.kotlin
 
 import javafx.application.Application
@@ -32,14 +35,14 @@ class FXApplication() : Application() {
 	override fun start(primaryStage: Stage) {
 
 		val loader = FXMLLoader()
-		val root = loader.load<Parent>(FXWindow::class.java.getResourceAsStream("AddressBook.fxml"))
+		val root = loader.load<Parent>(FXResources.fxml.openStream())
 		val controller = loader.getController<FXWindow>()
 
 		val scene = Scene(root)
 		primaryStage.scene = scene
 
-		primaryStage.icons.add(Image(FXWindow::class.java.getResource("icons/bfh.png").toExternalForm()))
-		scene.stylesheets.add(FXWindow::class.java.getResource("AddressBook.css").toExternalForm())
+		primaryStage.icons.add(Image(FXResources.logo.toExternalForm()))
+		scene.stylesheets.add(FXResources.stylesheet.toExternalForm())
 
 		controller.initialize(primaryStage, scene)
 		primaryStage.show()

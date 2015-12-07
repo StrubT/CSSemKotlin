@@ -1,3 +1,6 @@
+@file:JvmName("Program")
+@file:JvmMultifileClass
+
 package ch.bfh.cssem.kotlin.app.kotlin
 
 import ch.bfh.cssem.kotlin.api.AddressBook
@@ -56,4 +59,20 @@ class FXWindow : Initializable {
 		stage.width = rootPane.prefWidth
 		stage.height = rootPane.prefHeight
 	}
+}
+
+/**
+ * Contains the [URL]s to the different resources.
+ *
+ * @property fxml       [FXML] file containing the [Window][javafx.stage.Window] components
+ * @property stylesheet CSS [Stylesheet][com.sun.javafx.css.Stylesheet]
+ * @property logo       logo of the Bern University of Applied Sciences
+ *
+ * @author strut1 & touwm1
+ */
+object FXResources {
+
+	val fxml = FXResources::class.java.getResource("AddressBook.fxml")
+	val stylesheet = FXResources::class.java.getResource("AddressBook.css")
+	val logo = FXResources::class.java.getResource("icons/bfh.png")
 }
