@@ -1,6 +1,3 @@
-@file:JvmName("Program")
-@file:JvmMultifileClass
-
 package ch.bfh.cssem.kotlin.app.kotlin
 
 import javafx.application.Application
@@ -35,7 +32,7 @@ class FXApplication() : Application() {
 	override fun start(primaryStage: Stage) {
 
 		val loader = FXMLLoader()
-		val root = loader.load<Parent>(FXResources.fxml.openStream())
+		val root = FXResources.fxml.openStream().use { loader.load<Parent>(it) }
 		val controller = loader.getController<FXWindow>()
 
 		val scene = Scene(root)
@@ -47,4 +44,20 @@ class FXApplication() : Application() {
 		controller.initialize(primaryStage, scene)
 		primaryStage.show()
 	}
+}
+
+/**
+ * Contains the [URL]s to the different resources.
+ *
+ * @property fxml       [FXML] file containing the [Window][javafx.stage.Window] components
+ * @property stylesheet CSS [Stylesheet][com.sun.javafx.css.Stylesheet]
+ * @property logo       logo of the Bern University of Applied Sciences
+ *
+ * @author strut1 & touwm1
+ */
+object FXResources {
+
+	val fxml = FXResources::class.java.getResource("AddressBook.fxml")!!
+	val stylesheet = FXResources::class.java.getResource("AddressBook.css")!!
+	val logo = FXResources::class.java.getResource("icons/bfh.png")!!
 }
