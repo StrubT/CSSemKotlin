@@ -10,7 +10,10 @@ import javafx.scene.control.Label
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.control.TableView
+import javafx.scene.control.TextField
+import javafx.scene.input.KeyEvent
 import javafx.scene.layout.BorderPane
+import javafx.scene.layout.GridPane
 import javafx.stage.Stage
 import java.net.URL
 import java.util.ResourceBundle
@@ -38,6 +41,9 @@ class FXWindow : Initializable {
 	@FXML protected lateinit var titleLabel: Label
 	@FXML protected lateinit var tabPane: TabPane
 	@FXML protected lateinit var peopleTab: Tab
+	@FXML protected lateinit var peoplePane: GridPane
+	@FXML protected lateinit var peopleSearchLabel: Label
+	@FXML protected lateinit var peopleSearchField: TextField
 	@FXML protected lateinit var peopleTable: TableView<FXPerson>
 
 	/**
@@ -45,7 +51,7 @@ class FXWindow : Initializable {
 	 */
 	override fun initialize(location: URL?, resources: ResourceBundle?) {
 
-		peopleTable.items = addressBook.fetchAllPeople().mapTo(FXCollections.observableArrayList()) { FXPerson(it) }
+		searchPeople()
 	}
 
 	/**
@@ -59,5 +65,11 @@ class FXWindow : Initializable {
 		stage.height = rootPane.prefHeight
 
 		stage.title = titleLabel.text
+	}
+
+	fun searchPeople(event: KeyEvent? = null) {
+
+		peopleTable.items = (if (peopleSearchField.text.isNullOrEmpty()) addressBook.fetchAllPeople() else addressBook.fetchPeopleByName(peopleSearchField.text))
+			.mapTo(FXCollections.observableArrayList()) { FXPerson(it) }
 	}
 }

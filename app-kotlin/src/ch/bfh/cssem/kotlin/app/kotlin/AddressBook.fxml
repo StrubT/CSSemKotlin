@@ -7,6 +7,10 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.TextField?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 						fx:controller="ch.bfh.cssem.kotlin.app.kotlin.FXWindow"
 						fx:id="rootPane"
@@ -18,40 +22,48 @@
 	<center>
 		<TabPane fx:id="tabPane">
 			<Tab fx:id="peopleTab" text="People" closable="false">
-				<TableView fx:id="peopleTable">
-					<columns>
-						<TableColumn text="First Name">
-							<cellValueFactory>
-								<PropertyValueFactory property="firstName" />
-							</cellValueFactory>
-						</TableColumn>
-						<TableColumn text="Last Name">
-							<cellValueFactory>
-								<PropertyValueFactory property="lastName" />
-							</cellValueFactory>
-						</TableColumn>
-						<TableColumn text="Street">
-							<cellValueFactory>
-								<PropertyValueFactory property="street" />
-							</cellValueFactory>
-						</TableColumn>
-						<TableColumn text="Address">
-							<cellValueFactory>
-								<PropertyValueFactory property="address" />
-							</cellValueFactory>
-						</TableColumn>
-						<TableColumn text="E-Mail Address/es">
-							<cellValueFactory>
-								<PropertyValueFactory property="email" />
-							</cellValueFactory>
-						</TableColumn>
-						<TableColumn text="Telephone Number/s">
-							<cellValueFactory>
-								<PropertyValueFactory property="phone" />
-							</cellValueFactory>
-						</TableColumn>
-					</columns>
-				</TableView>
+				<GridPane fx:id="peoplePane">
+					<rowConstraints>
+						<RowConstraints vgrow="NEVER" />
+						<RowConstraints vgrow="ALWAYS" />
+					</rowConstraints>
+					<columnConstraints>
+						<ColumnConstraints hgrow="ALWAYS" />
+						<ColumnConstraints hgrow="NEVER" />
+						<ColumnConstraints hgrow="NEVER" />
+					</columnConstraints>
+					<Label fx:id="peopleSearchLabel" text="Filter" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+					<TextField fx:id="peopleSearchField" promptText="search filter" onKeyTyped="#searchPeople" GridPane.rowIndex="0" GridPane.columnIndex="2" />
+					<TableView fx:id="peopleTable" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="3">
+						<columns>
+							<TableColumn text="First Name">
+								<cellValueFactory>
+									<PropertyValueFactory property="firstName" />
+								</cellValueFactory>
+							</TableColumn>
+							<TableColumn text="Last Name">
+								<cellValueFactory>
+									<PropertyValueFactory property="lastName" />
+								</cellValueFactory>
+							</TableColumn>
+							<TableColumn text="Address">
+								<cellValueFactory>
+									<PropertyValueFactory property="address" />
+								</cellValueFactory>
+							</TableColumn>
+							<TableColumn text="E-Mail Address/es">
+								<cellValueFactory>
+									<PropertyValueFactory property="email" />
+								</cellValueFactory>
+							</TableColumn>
+							<TableColumn text="Telephone Number/s">
+								<cellValueFactory>
+									<PropertyValueFactory property="phone" />
+								</cellValueFactory>
+							</TableColumn>
+						</columns>
+					</TableView>
+				</GridPane>
 			</Tab>
 		</TabPane>
 	</center>
