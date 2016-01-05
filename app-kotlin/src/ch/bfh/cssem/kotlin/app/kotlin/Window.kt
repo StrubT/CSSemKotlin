@@ -322,8 +322,7 @@ val String.filter: SearchFilter
 	get() {
 		val regex = Regex("\\s*\\[\\s*(\\w+)\\s*=\\s*([^\\]]+)\\s*\\]\\s*")
 		val map = HashMap<String, String>()
-		for (match in regex.findAll(this))
-			map.put(match.groups[1]!!.value, match.groups[2]!!.value)
+		regex.findAll(this).forEach { map.put(it.groups[1]!!.value, it.groups[2]!!.value) }
 		return SearchFilter(map, regex.replace(this, ""))
 	}
 

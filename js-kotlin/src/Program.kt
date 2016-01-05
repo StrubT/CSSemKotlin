@@ -31,6 +31,17 @@ fun factorialLoopV2(n: Int): Long {
 	return res
 }
 
+fun factorialLoopV3(n: Int): Long {
+	if (n in 0..1) return 1
+	else if (n < 0) throw IllegalArgumentException("Cannot calculate factorial of negative numbers.")
+
+	var res = 1L
+	for (fac in 2..n) //or: n downTo 2
+		res *= fac
+
+	return res
+}
+
 fun <T> forEachIndexed(collection: Collection<T>, operation: (Int, T) -> Unit) = collection.forEachIndexed (operation)
 
 fun testValue(x: Any?) {
@@ -46,11 +57,11 @@ fun testValue(x: Any?) {
 		0                -> print("x == 0")
 		parseInt(string) -> print("string encodes x")
 		"hello", "Hello" -> print("x says hello")
-//	in 1..10         -> print("x is in the range 1..10")
-//	!in validNumbers -> {
-//		print("x is invalid")
-//		doSomething()
-//	}
+	//in 1..10         -> print("x is in the range 1..10")
+	//!in validNumbers -> {
+	//	print("x is invalid")
+	//	doSomething()
+	//}
 		is Iterable<*>   -> print("x is iterable")
 		else             -> throw IllegalArgumentException("unknown argument")
 	}
