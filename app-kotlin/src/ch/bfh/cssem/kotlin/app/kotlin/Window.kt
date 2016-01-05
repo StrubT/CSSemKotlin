@@ -155,6 +155,11 @@ class FXWindow : Initializable {
 		stage.addEventFilter(WindowEvent.WINDOW_HIDDEN) { addressBookExecutor.shutdown() }
 	}
 
+	/**
+	 * Searches for people in the data source.
+	 *
+	 * @param event [KeyEvent] that triggered the search, if any
+	 */
 	fun searchPeople(event: KeyEvent? = null) {
 
 		addressBookExecutor.submit {
@@ -169,6 +174,12 @@ class FXWindow : Initializable {
 		}
 	}
 
+	/**
+	 * Applies special filters to the city table.
+	 *
+	 * @param state   state to filter cities by
+	 * @param country country to filter cities by
+	 */
 	fun filterCities(state: State? = null, country: Country? = null) {
 
 		val filter = citiesSearchField.text.filter
@@ -185,6 +196,12 @@ class FXWindow : Initializable {
 		searchCities()
 	}
 
+
+	/**
+	 * Searches for cities in the data source.
+	 *
+	 * @param event [KeyEvent] that triggered the search, if any
+	 */
 	fun searchCities(event: KeyEvent? = null) {
 
 		val filter = citiesSearchField.text.filter
@@ -209,6 +226,11 @@ class FXWindow : Initializable {
 		}
 	}
 
+	/**
+	 * Applies a special filter to the state table.
+	 *
+	 * @param country country to filter states by
+	 */
 	fun filterStates(country: Country? = null) {
 
 		val filter = statesSearchField.text.filter
@@ -221,6 +243,12 @@ class FXWindow : Initializable {
 		searchStates()
 	}
 
+
+	/**
+	 * Searches for states in the data source.
+	 *
+	 * @param event [KeyEvent] that triggered the search, if any
+	 */
 	fun searchStates(event: KeyEvent? = null) {
 
 		val filter = statesSearchField.text.filter
@@ -243,6 +271,12 @@ class FXWindow : Initializable {
 		}
 	}
 
+
+	/**
+	 * Searches for countries in the data source.
+	 *
+	 * @param event [KeyEvent] that triggered the search, if any
+	 */
 	fun searchCountries(event: KeyEvent? = null) {
 
 		addressBookExecutor.submit {

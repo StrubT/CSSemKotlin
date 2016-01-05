@@ -29,6 +29,10 @@ fun main(vararg args: String) {
  */
 class FXApplication() : Application() {
 
+	/**
+	 * Starts the JavaFX [Application].
+	 * Loads the resources and creates the [Window][javafx.stage.Window].
+	 */
 	override fun start(primaryStage: Stage) {
 
 		val loader = FXMLLoader()
