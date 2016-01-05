@@ -4,7 +4,32 @@ fun power(base: Double, exponent: Double) = Math.pow(base, exponent)
 fun square(base: Double) = power(base, 2.0)
 fun cube(base: Double) = power(base, 3.0)
 
-fun factorial(n: Int): Long = if (n in 0..1) 1 else if (n > 0) n * factorial(n - 1) else throw IllegalArgumentException("Cannot calculate factorial of negative numbers.")
+fun factorialRecursive(n: Int): Long = if (n in 0..1) 1 else if (n > 0) n * factorialRecursive(n - 1) else throw IllegalArgumentException("Cannot calculate factorial of negative numbers.")
+
+fun factorialLoopV1(n: Int): Long {
+	if (n in 0..1) return 1
+	else if (n < 0) throw IllegalArgumentException("Cannot calculate factorial of negative numbers.")
+
+	var fac = n
+	var res = 1L
+	do
+		res *= fac--
+	while (fac > 1)
+
+	return res
+}
+
+fun factorialLoopV2(n: Int): Long {
+	if (n in 0..1) return 1
+	else if (n < 0) throw IllegalArgumentException("Cannot calculate factorial of negative numbers.")
+
+	var fac = n
+	var res = fac--.toLong()
+	while (fac > 1)
+		res *= fac--
+
+	return res
+}
 
 fun <T> forEachIndexed(collection: Collection<T>, operation: (Int, T) -> Unit) = collection.forEachIndexed (operation)
 
@@ -21,11 +46,11 @@ fun testValue(x: Any?) {
 		0                -> print("x == 0")
 		parseInt(string) -> print("string encodes x")
 		"hello", "Hello" -> print("x says hello")
-		in 1..10         -> print("x is in the range 1..10")
-		!in validNumbers -> {
-			print("x is invalid")
-			doSomething()
-		}
+//	in 1..10         -> print("x is in the range 1..10")
+//	!in validNumbers -> {
+//		print("x is invalid")
+//		doSomething()
+//	}
 		is Iterable<*>   -> print("x is iterable")
 		else             -> throw IllegalArgumentException("unknown argument")
 	}
