@@ -4,12 +4,12 @@ in the course Computer Science Seminar (BTI7311) at the Bern University of Appli
 
 The main project consists of five dependent modules:
 * API (Kotlin): `api-kotlin`
-* JPA implementation
+* JPA implementations (*interchangeable*)
   * Kotlin: `jpa-kotlin`
   * Java: `jpa-java`
-* Application
-  * Kotlin (JavaFX): `app-kotlin`
-  * Java (Console): `app-java`
+* JavaFX Applications (*interchangeable*)
+  * Kotlin: `app-kotlin`
+  * Java: `app-java`
 
 A sixth module is independent and uses a different technology:
 * JavaScript Library (Kotlin): `js-kotlin`
