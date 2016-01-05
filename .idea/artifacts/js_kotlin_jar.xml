@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="js-kotlin:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/js_kotlin_jar</output-path>
+    <root id="archive" name="js-kotlin.jar">
+      <element id="module-output" name="js-kotlin" />
+      <element id="library" level="module" name="&lt;Kotlin JavaScript library&gt;" module-name="js-kotlin" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/kotlin-jslib.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
