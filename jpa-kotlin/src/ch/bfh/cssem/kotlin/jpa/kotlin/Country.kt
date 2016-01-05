@@ -6,6 +6,7 @@ import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.NamedQueries
 import javax.persistence.NamedQuery
 import javax.persistence.OneToMany
 import javax.persistence.Table
@@ -25,7 +26,9 @@ import ch.bfh.cssem.kotlin.api.State as ApiState
  */
 @Entity
 @Table(name = "countries")
-@NamedQuery(name = Country.findByName, query = "select c from Country c where c.name like :name")
+@NamedQueries(NamedQuery(name = Country.findAll, query = "select c from Country c order by c.name"),
+							NamedQuery(name = Country.findByAbbreviation, query = "select c from Country c where c.abbreviation = :abbreviation"),
+							NamedQuery(name = Country.findByName, query = "select c from Country c where c.abbreviation like :name or c.name like :name order by c.name"))
 data class Country(
 
 	@Column(name = "abbreviation")
@@ -60,6 +63,8 @@ data class Country(
 
 	companion object {
 
+		internal const val findAll = "Country.findAll"
+		internal const val findByAbbreviation = "Country.findByAbbreviation"
 		internal const val findByName = "Country.findByName"
 
 		internal val undef = Country()

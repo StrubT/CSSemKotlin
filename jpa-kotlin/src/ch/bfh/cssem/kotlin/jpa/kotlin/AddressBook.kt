@@ -1,8 +1,6 @@
 package ch.bfh.cssem.kotlin.jpa.kotlin
 
 import javax.persistence.Persistence
-import kotlin.text.Regex
-import kotlin.text.RegexOption
 import ch.bfh.cssem.kotlin.api.AddressBook as ApiAddressBook
 import ch.bfh.cssem.kotlin.api.City as ApiCity
 import ch.bfh.cssem.kotlin.api.Country as ApiCountry
@@ -35,10 +33,14 @@ class AddressBook : ApiAddressBook {
 	 *
 	 * @return a [List] containing all [PersistentEntities][PersistentEntity]
 	 */
-	inline fun <reified E : PersistentEntity> findAll(): List<E> {
+	inline fun <reified E : PersistentEntity> findAll(pageIndex: Int = 0, pageSize: Int? = null): List<E> {
 
 		val criteriaQuery = entityManager.criteriaBuilder.createQuery(E::class.java)
 		val query = entityManager.createQuery(criteriaQuery.select(criteriaQuery.from(E::class.java)))
+
+		if (pageSize !== null)
+			query.setFirstResult(pageIndex * pageSize).setMaxResults(pageSize)
+
 		return query.resultList
 	}
 
@@ -50,10 +52,15 @@ class AddressBook : ApiAddressBook {
 	 *
 	 * @return a [List] containing the matching [PersistentEntities][PersistentEntity]
 	 */
-	protected inline fun <reified E : PersistentEntity> findByQuery(queryName: String, queryParameters: Map<String, Any?>?): List<E> {
+	protected inline fun <reified E : PersistentEntity> findByQuery(queryName: String, queryParameters: Map<String, Any?>? = null, pageIndex: Int = 0, pageSize: Int? = null): List<E> {
 
 		val query = entityManager.createNamedQuery(queryName, E::class.java)
+
 		queryParameters?.forEach { query.setParameter(it.key, it.value) }
+
+		if (pageSize !== null)
+			query.setFirstResult(pageIndex * pageSize).setMaxResults(pageSize)
+
 		return query.resultList
 	}
 
@@ -95,29 +102,27 @@ class AddressBook : ApiAddressBook {
 	 */
 	fun <E : PersistentEntity> remove(entity: E) = entityManager.remove(entity)
 
-	override fun fetchAllPeople() = findAll<Person>()
+	override fun fetchAllPeople() = findByQuery<Person>(Person.findAll)
 
 	override fun fetchPeopleByName(filter: String) = findByQuery<Person>(Person.findByName, mapOf("name" to filter.makeFilter()))
 
 	override fun fetchPersonByEmail(email: String) = findByQuery<Person>(Person.findByEMail, mapOf("email" to email)).singleOrNull()
 
-	override fun fetchAllCities() = findAll<City>()
-
-	override fun fetchAllCitiesInState(state: ApiState) = (state as State).citiesJpa
-
-	override fun fetchAllCitiesInCountry(country: ApiCountry) = (country as Country).citiesJpa
+	override fun fetchAllCities() = findByQuery<City>(City.findAll)
 
 	override fun fetchCitiesByName(filter: String) = findByQuery<City>(City.findByName, mapOf("name" to filter.makeFilter()))
 
 	override fun fetchCitiesByPostalCode(filter: String) = findByQuery<City>(City.findByPostalCode, mapOf("postalCode" to filter.makeFilter()))
 
-	override fun fetchAllStates() = findAll<State>()
+	override fun fetchAllStates() = findByQuery<State>(State.findAll)
 
-	override fun fetchAllStatesInCountry(country: ApiCountry) = (country as Country).statesJpa
+	override fun fetchStateByAbbreviation(countryAbbreviation: String, abbreviation: String) = findByQuery<State>(State.findByAbbreviation, mapOf("countryAbbreviation" to countryAbbreviation, "abbreviation" to abbreviation)).single()
 
 	override fun fetchStatesByName(filter: String) = findByQuery<State>(State.findByName, mapOf("name" to filter.makeFilter()))
 
-	override fun fetchAllCountries() = findAll<Country>()
+	override fun fetchAllCountries() = findByQuery<Country>(Country.findAll)
+
+	override fun fetchCountryByAbbreviation(abbreviation: String) = findByQuery<Country>(Country.findByAbbreviation, mapOf("abbreviation" to abbreviation)).singleOrNull()
 
 	override fun fetchCountriesByName(filter: String) = findByQuery<Country>(Country.findByName, mapOf("name" to filter.makeFilter()))
 

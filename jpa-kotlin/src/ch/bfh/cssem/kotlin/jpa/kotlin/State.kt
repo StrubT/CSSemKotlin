@@ -8,6 +8,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+import javax.persistence.NamedQueries
 import javax.persistence.NamedQuery
 import javax.persistence.OneToMany
 import javax.persistence.Table
@@ -27,7 +28,9 @@ import ch.bfh.cssem.kotlin.api.State as ApiState
  */
 @Entity
 @Table(name = "states")
-@NamedQuery(name = State.findByName, query = "select s from State s where s.name like :name")
+@NamedQueries(NamedQuery(name = State.findAll, query = "select s from State s order by s.name"),
+							NamedQuery(name = State.findByAbbreviation, query = "select s from State s where s.countryJpa.abbreviation = :countryAbbreviation and s.abbreviation = :abbreviation"),
+							NamedQuery(name = State.findByName, query = "select s from State s where s.abbreviation like :name or s.name like :name order by s.name"))
 data class State(
 
 	@Column(name = "abbreviation")
@@ -66,6 +69,8 @@ data class State(
 
 	companion object {
 
+		internal const val findAll = "State.findAll"
+		internal const val findByAbbreviation = "State.findByAbbreviation"
 		internal const val findByName = "State.findByName"
 
 		internal val undef = State()

@@ -1,2 +1,7 @@
+/* pane spacing */
+GridPane, FlowPane { -fx-hgap: 5px; -fx-vgap: 5px; }
+HBox, VBox { -fx-spacing: 5px; }
+.tab-content-area { -fx-padding: 5px; }
+/* title formatting */
 .h1 { -fx-font-size: 250%; -fx-font-weight: bold; }
 .h2 { -fx-font-size: 150%; -fx-font-weight: bold; }

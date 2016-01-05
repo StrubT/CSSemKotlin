@@ -40,24 +40,6 @@ interface AddressBook {
 	fun fetchAllCities(): List<City>
 
 	/**
-	 * Fetches all cities in a specific state from the data source.
-	 *
-	 * @param state the state to search for cities in
-	 *
-	 * @return a [List] containing the matching [City] objects
-	 */
-	fun fetchAllCitiesInState(state: State): List<City>
-
-	/**
-	 * Fetches all cities in a specific country from the data source.
-	 *
-	 * @param country the country to search for cities in
-	 *
-	 * @return a [List] containing the matching [City] objects
-	 */
-	fun fetchAllCitiesInCountry(country: Country): List<City>
-
-	/**
 	 * Fetches all cities with a [City.name] matching the provided filter from the data source.
 	 *
 	 * @param filter the filter to match the names against
@@ -83,13 +65,24 @@ interface AddressBook {
 	fun fetchAllStates(): List<State>
 
 	/**
-	 * Fetches all states in a specific country from the data source.
+	 * Fetches the state with the specified [State.abbreviation] from the data source.
 	 *
 	 * @param country the country to search for states in
+	 * @param abbreviation the abbreviation to search for
 	 *
-	 * @return a [List] containing the matching [State] objects
+	 * @return the [State] with the specified abbreviation; or null, if none
 	 */
-	fun fetchAllStatesInCountry(country: Country): List<State>
+	fun fetchStateByAbbreviation(country: Country, abbreviation: String) = fetchStateByAbbreviation(country.abbreviation, abbreviation)
+
+	/**
+	 * Fetches the state with the specified [State.abbreviation] from the data source.
+	 *
+	 * @param countryAbbreviation the abbreviation of the country to search for states in
+	 * @param abbreviation the abbreviation to search for
+	 *
+	 * @return the [State] with the specified abbreviation; or null, if none
+	 */
+	fun fetchStateByAbbreviation(countryAbbreviation: String, abbreviation: String): State?
 
 	/**
 	 * Fetches all states with a [State.name] matching the provided filter from the data source.
@@ -106,6 +99,15 @@ interface AddressBook {
 	 * @return a [List] containing all [Country] objects
 	 */
 	fun fetchAllCountries(): List<Country>
+
+	/**
+	 * Fetches the country with the specified [Country.abbreviation] from the data source.
+	 *
+	 * @param abbreviation the abbreviation to search for
+	 *
+	 * @return the [Country] with the specified abbreviation; or null, if none
+	 */
+	fun fetchCountryByAbbreviation(abbreviation: String): Country?
 
 	/**
 	 * Fetches all countries with a [Country.name] matching the provided filter from the data source.

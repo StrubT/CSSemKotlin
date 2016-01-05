@@ -25,8 +25,9 @@ import ch.bfh.cssem.kotlin.api.Person as ApiPerson
  */
 @Entity
 @Table(name = "people")
-@NamedQueries(NamedQuery(name = Person.findByName, query = "select p from Person p where p.firstName like :name or p.lastName like :name"),
-							NamedQuery(name = Person.findByEMail, query = "select p from Person p where p.emailPrivate = :email or p.emailWork = :email"))
+@NamedQueries(NamedQuery(name = Person.findAll, query = "select p from Person p order by p.lastName, p.firstName"),
+							NamedQuery(name = Person.findByName, query = "select p from Person p where p.firstName like :name or p.lastName like :name order by p.lastName, p.firstName"),
+							NamedQuery(name = Person.findByEMail, query = "select p from Person p where p.emailPrivate = :email or p.emailWork = :email order by p.lastName, p.firstName"))
 data class Person(
 
 	@Column(name = "lastname")
@@ -77,6 +78,7 @@ data class Person(
 
 	companion object {
 
+		internal const val findAll = "Person.findAll"
 		internal const val findByName = "Person.findByName"
 		internal const val findByEMail = "Person.findByEMail"
 
