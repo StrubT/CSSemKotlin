@@ -110,6 +110,8 @@ class AddressBook : ApiAddressBook {
 
 	override fun fetchAllCities() = findByQuery<City>(City.findAll)
 
+	override fun fetchCityByPostalCodeName(postalCode: String, name: String) = findByQuery<City>(City.findByPostalCodeName, mapOf("postalCode" to postalCode, "name" to name)).single()
+
 	override fun fetchCitiesByName(filter: String) = findByQuery<City>(City.findByName, mapOf("name" to filter.makeFilter()))
 
 	override fun fetchCitiesByPostalCode(filter: String) = findByQuery<City>(City.findByPostalCode, mapOf("postalCode" to filter.makeFilter()))
@@ -164,4 +166,4 @@ class AddressBook : ApiAddressBook {
  *
  * @return MySQL filter string to use in a [like](http://dev.mysql.com/doc/en/string-comparison-functions.html#operator_like) comparison.
  */
-fun String.makeFilter() = "%${this.replace(Regex("/[^A-Z0-9]+/", RegexOption.IGNORE_CASE), "%").trim('%')}%"
+fun String.makeFilter() = "%${replace(Regex("[^a-z0-9]+", RegexOption.IGNORE_CASE), "%").trim('%')}%"

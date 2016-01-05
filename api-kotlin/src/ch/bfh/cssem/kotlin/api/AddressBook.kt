@@ -40,6 +40,16 @@ interface AddressBook {
 	fun fetchAllCities(): List<City>
 
 	/**
+	 * Fetches the city with the specified [City.postalCode] and [City.name] from the data source.
+	 *
+	 * @param postalCode the postal code to search for
+	 * @param name       the name to search for
+	 *
+	 * @return the [City] with the specified postal code and name; or null, if none
+	 */
+	fun fetchCityByPostalCodeName(postalCode: String, name: String): City?
+
+	/**
 	 * Fetches all cities with a [City.name] matching the provided filter from the data source.
 	 *
 	 * @param filter the filter to match the names against

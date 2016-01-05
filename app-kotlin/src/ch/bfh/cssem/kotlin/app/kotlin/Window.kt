@@ -3,6 +3,7 @@ package ch.bfh.cssem.kotlin.app.kotlin
 import ch.bfh.cssem.kotlin.api.AddressBook
 import ch.bfh.cssem.kotlin.api.City
 import ch.bfh.cssem.kotlin.api.Country
+import ch.bfh.cssem.kotlin.api.Person
 import ch.bfh.cssem.kotlin.api.State
 import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.FXCity
 import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.FXCountry
@@ -12,6 +13,7 @@ import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
+import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.control.Label
 import javafx.scene.control.Tab
@@ -113,11 +115,22 @@ class FXWindow : Initializable {
 	 */
 	override fun initialize(location: URL?, resources: ResourceBundle?) {
 
+		citiesTable.setRowFactory {
+			val row = TableRow<FXCity>()
+			row.setOnMouseClicked { event ->
+				if (event.clickCount == 2 && !row.isEmpty)
+					filterPeople(row.item)
+			}
+			row
+		}
+
 		statesTable.setRowFactory {
 			val row = TableRow<FXState>()
 			row.setOnMouseClicked { event ->
-				if (event.clickCount == 2 && !row.isEmpty)
+				if (event.clickCount == 2 && !row.isEmpty) {
+					filterPeople(state = row.item)
 					filterCities(row.item)
+				}
 			}
 			row
 		}
@@ -126,6 +139,7 @@ class FXWindow : Initializable {
 			val row = TableRow<FXCountry>()
 			row.setOnMouseClicked { event ->
 				if (event.clickCount == 2 && !row.isEmpty) {
+					filterPeople(country = row.item)
 					filterCities(country = row.item)
 					filterStates(row.item)
 				}
@@ -156,17 +170,55 @@ class FXWindow : Initializable {
 	}
 
 	/**
+	 * Applies special filters to the people table.
+	 *
+	 * @param city    city to filter people by
+	 * @param state   state to filter people by
+	 * @param country country to filter people by
+	 */
+	fun filterPeople(city: City? = null, state: State? = null, country: Country? = null) {
+
+		val filter = peopleSearchField.text.filter
+		if (city !== null) {
+			filter.valueFilters.remove(SearchFilter.countryKey)
+			filter.valueFilters.remove(SearchFilter.stateKey)
+			filter.valueFilters.put(SearchFilter.cityKey, "${city.postalCode}-${city.name}")
+
+		} else if (state !== null) {
+			filter.valueFilters.remove(SearchFilter.countryKey)
+			filter.valueFilters.put(SearchFilter.stateKey, "${state.country.abbreviation}-${state.abbreviation}")
+
+		} else if (country !== null)
+			filter.valueFilters.put(SearchFilter.countryKey, country.abbreviation)
+
+		peopleSearchField.text = filter.combined
+
+		tabPane.selectionModel.select(peopleTab)
+		searchPeople()
+	}
+
+	/**
 	 * Searches for people in the data source.
 	 *
 	 * @param event [KeyEvent] that triggered the search, if any
 	 */
 	fun searchPeople(event: KeyEvent? = null) {
 
+		val filter = peopleSearchField.text.filter
+		val filterByName = !filter.textFilter.isNullOrBlank()
+		val filterByCountry = filter.valueFilters.containsKey(SearchFilter.countryKey)
+		val filterByState = filter.valueFilters.containsKey(SearchFilter.stateKey)
+		val filterByCity= filter.valueFilters.containsKey(SearchFilter.cityKey)
+
 		addressBookExecutor.submit {
-			val result = if (!citiesSearchField.text.isNullOrBlank())
-				addressBook.fetchPeopleByName(peopleSearchField.text)
-			else
-				addressBook.fetchAllPeople()
+			val partialResults = ArrayList<List<Person>>()
+			if (filterByName) partialResults.add(addressBook.fetchPeopleByName(filter.textFilter))
+			if (filterByCountry) partialResults.add(addressBook.fetchCountryByAbbreviation(filter.valueFilters[SearchFilter.countryKey]!!)?.states?.flatMap { it.cities }?.flatMap { it.people } ?: listOf())
+			if (filterByState) partialResults.add(addressBook.fetchStateByAbbreviation(filter.valueFilters[SearchFilter.stateKey]!!)?.cities?.flatMap { it.people } ?: listOf())
+			if (filterByCity) partialResults.add(addressBook.fetchCityByPostalCodeName(filter.valueFilters[SearchFilter.cityKey]!!)?.people ?: listOf())
+			if (partialResults.isEmpty()) partialResults.add(addressBook.fetchAllPeople())
+
+			val result = partialResults.reduce { a, b -> a.intersectList(b) }
 
 			Platform.runLater {
 				peopleTable.items = result.mapTo(FXCollections.observableArrayList()) { FXPerson(it) }
@@ -186,8 +238,8 @@ class FXWindow : Initializable {
 		if (state !== null) {
 			filter.valueFilters.remove(SearchFilter.countryKey)
 			filter.valueFilters.put(SearchFilter.stateKey, "${state.country.abbreviation}-${state.abbreviation}")
-		}
-		if (country !== null)
+
+		} else if (country !== null)
 			filter.valueFilters.put(SearchFilter.countryKey, country.abbreviation)
 
 		citiesSearchField.text = filter.combined
@@ -310,6 +362,7 @@ data class SearchFilter(var valueFilters: MutableMap<String, String>, var textFi
 
 	companion object {
 
+		internal const val cityKey = "city"
 		internal const val stateKey = "state"
 		internal const val countryKey = "country"
 	}
@@ -325,6 +378,15 @@ val String.filter: SearchFilter
 		regex.findAll(this).forEach { map.put(it.groups[1]!!.value, it.groups[2]!!.value) }
 		return SearchFilter(map, regex.replace(this, ""))
 	}
+
+/**
+ * Alternative to [AddressBook.fetchCityByPostalCodeName] taking one parameter instead.
+ */
+fun AddressBook.fetchCityByPostalCodeName(postalCodeName: String): City? {
+	val abbrs = postalCodeName.split('-')
+	if (abbrs.size != 2) throw IllegalArgumentException("There must be both the postal code and the name separated by a dash.")
+	return fetchCityByPostalCodeName(abbrs[0], abbrs[1])
+}
 
 /**
  * Alternative to [AddressBook.fetchStateByAbbreviation] taking one parameter instead.

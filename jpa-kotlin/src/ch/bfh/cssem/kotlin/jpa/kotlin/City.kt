@@ -31,6 +31,7 @@ import ch.bfh.cssem.kotlin.api.State as ApiState
 @Entity
 @Table(name = "cities")
 @NamedQueries(NamedQuery(name = City.findAll, query = "select c from City c order by c.name, c.postalCode"),
+							NamedQuery(name = City.findByPostalCodeName, query = "select c from City c where c.postalCode = :postalCode and c.name = :name"),
 							NamedQuery(name = City.findByName, query = "select c from City c where c.name like :name order by c.name, c.postalCode"),
 							NamedQuery(name = City.findByPostalCode, query = "select c from City c where c.postalCode like :postalCode order by c.name, c.postalCode"))
 data class City(
@@ -82,6 +83,7 @@ data class City(
 	companion object {
 
 		internal const val findAll = "City.findAll"
+		internal const val findByPostalCodeName = "City.findByPostalCodeName"
 		internal const val findByName = "City.findByName"
 		internal const val findByPostalCode = "City.findByPostalCode"
 
