@@ -9,11 +9,12 @@ import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.FXCity
 import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.FXCountry
 import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.FXPerson
 import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.FXState
+import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.fetchCityByPostalCodeName
+import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.fetchStateByAbbreviation
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
-import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.control.Label
 import javafx.scene.control.Tab
@@ -28,7 +29,6 @@ import javafx.stage.Stage
 import javafx.stage.WindowEvent
 import java.net.URL
 import java.util.ArrayList
-import java.util.HashMap
 import java.util.ResourceBundle
 import java.util.ServiceLoader
 import java.util.concurrent.Executors
@@ -208,7 +208,7 @@ class FXWindow : Initializable {
 		val filterByName = !filter.textFilter.isNullOrBlank()
 		val filterByCountry = filter.valueFilters.containsKey(SearchFilter.countryKey)
 		val filterByState = filter.valueFilters.containsKey(SearchFilter.stateKey)
-		val filterByCity= filter.valueFilters.containsKey(SearchFilter.cityKey)
+		val filterByCity = filter.valueFilters.containsKey(SearchFilter.cityKey)
 
 		addressBookExecutor.submit {
 			val partialResults = ArrayList<List<Person>>()
@@ -342,66 +342,4 @@ class FXWindow : Initializable {
 			}
 		}
 	}
-}
-
-/**
- * Represents the contents of a search filter.
- *
- * @property valueFilters the special value filters enclosed in square brackets
- * @property textFilter   the default text filter
- *
- * @author strut1 & touwm1
- */
-data class SearchFilter(var valueFilters: MutableMap<String, String>, var textFilter: String) {
-
-	/**
-	 * Gets the combined filter text.
-	 */
-	val combined: String
-		get() = "${valueFilters.entries.joinToString(separator = " ") { "[${it.key}=${it.value}]" }} $textFilter"
-
-	companion object {
-
-		internal const val cityKey = "city"
-		internal const val stateKey = "state"
-		internal const val countryKey = "country"
-	}
-}
-
-/**
- * Creates a [SearchFilter] from the filter text.
- */
-val String.filter: SearchFilter
-	get() {
-		val regex = Regex("\\s*\\[\\s*(\\w+)\\s*=\\s*([^\\]]+)\\s*\\]\\s*")
-		val map = HashMap<String, String>()
-		regex.findAll(this).forEach { map.put(it.groups[1]!!.value, it.groups[2]!!.value) }
-		return SearchFilter(map, regex.replace(this, ""))
-	}
-
-/**
- * Alternative to [AddressBook.fetchCityByPostalCodeName] taking one parameter instead.
- */
-fun AddressBook.fetchCityByPostalCodeName(postalCodeName: String): City? {
-	val abbrs = postalCodeName.split('-')
-	if (abbrs.size != 2) throw IllegalArgumentException("There must be both the postal code and the name separated by a dash.")
-	return fetchCityByPostalCodeName(abbrs[0], abbrs[1])
-}
-
-/**
- * Alternative to [AddressBook.fetchStateByAbbreviation] taking one parameter instead.
- */
-fun AddressBook.fetchStateByAbbreviation(countryStateAbbreviation: String): State? {
-	val abbrs = countryStateAbbreviation.split('-')
-	if (abbrs.size != 2) throw IllegalArgumentException("There must be both the country and the state abbreviation separated by a dash.")
-	return fetchStateByAbbreviation(abbrs[0], abbrs[1])
-}
-
-/**
- * Alternative to [Collection.intersect] returning a [List] instead.
- */
-infix fun <T> List<T>.intersectList(other: List<T>): List<T> {
-	val mut = ArrayList(this)
-	mut.retainAll(other)
-	return mut
 }
