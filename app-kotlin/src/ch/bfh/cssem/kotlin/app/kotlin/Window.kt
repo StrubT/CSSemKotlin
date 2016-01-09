@@ -12,10 +12,10 @@ import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.FXState
 import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.fetchCityByPostalCodeName
 import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.fetchStateByAbbreviation
 import javafx.application.Platform
-import javafx.collections.FXCollections
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
 import javafx.scene.Scene
+import javafx.scene.control.ComboBox
 import javafx.scene.control.Label
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
@@ -24,7 +24,9 @@ import javafx.scene.control.TableView
 import javafx.scene.control.TextField
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.BorderPane
+import javafx.scene.layout.FlowPane
 import javafx.scene.layout.GridPane
+import javafx.scene.layout.StackPane
 import javafx.stage.Stage
 import javafx.stage.WindowEvent
 import java.net.URL
@@ -32,16 +34,6 @@ import java.util.ArrayList
 import java.util.ResourceBundle
 import java.util.ServiceLoader
 import java.util.concurrent.Executors
-
-/**
- * [AddressBook] instance to use throughout the project.
- */
-private val addressBook = ServiceLoader.load(AddressBook::class.java).single()
-
-/**
- * [java.util.concurrent.ExecutorService] to use when accessing the address book
- */
-private val addressBookExecutor = Executors.newSingleThreadExecutor()
 
 /**
  * Contains the logic to control the JavaFX [Window][javafx.stage.Window].
@@ -80,7 +72,8 @@ private val addressBookExecutor = Executors.newSingleThreadExecutor()
  */
 class FXWindow : Initializable {
 
-	@FXML protected lateinit var rootPane: BorderPane
+	@FXML protected lateinit var rootPane: StackPane
+	@FXML protected lateinit var contentPane: BorderPane
 	@FXML protected lateinit var titleLabel: Label
 	@FXML protected lateinit var tabPane: TabPane
 	@FXML protected lateinit var peopleTab: Tab
@@ -109,6 +102,30 @@ class FXWindow : Initializable {
 	@FXML protected lateinit var countriesSearchLabel: Label
 	@FXML protected lateinit var countriesSearchField: TextField
 	@FXML protected lateinit var countriesTable: TableView<FXCountry>
+	@FXML protected lateinit var personEditContainerPane: FlowPane
+	@FXML protected lateinit var personEditPane: GridPane
+	@FXML protected lateinit var personEditTitleLabel: Label
+	@FXML protected lateinit var personEditLastNameLabel: Label
+	@FXML protected lateinit var personEditLastNameField: TextField
+	@FXML protected lateinit var personEditFirstNameLabel: Label
+	@FXML protected lateinit var personEditFirstNameField: TextField
+	@FXML protected lateinit var personEditStreetLabel: Label
+	@FXML protected lateinit var personEditStreetField: TextField
+	@FXML protected lateinit var personEditCityLabel: Label
+	@FXML protected lateinit var personEditCityCombo: ComboBox<FXCity>
+	@FXML protected lateinit var personEditEmailPrivateLabel: Label
+	@FXML protected lateinit var personEditEmailPrivateField: TextField
+	@FXML protected lateinit var personEditEmailWorkLabel: Label
+	@FXML protected lateinit var personEditEmailWorkField: TextField
+	@FXML protected lateinit var personEditPhoneHomeLabel: Label
+	@FXML protected lateinit var personEditPhoneHomeField: TextField
+	@FXML protected lateinit var personEditPhoneMobileLabel: Label
+	@FXML protected lateinit var personEditPhoneMobileField: TextField
+	@FXML protected lateinit var personEditPhoneWorkLabel: Label
+	@FXML protected lateinit var personEditPhoneWorkField: TextField
+
+	private val addressBook = ServiceLoader.load(AddressBook::class.java).single()
+	private val addressBookExecutor = Executors.newSingleThreadExecutor()
 
 	/**
 	 * Initialises the [Window][javafx.stage.Window] controller after the root [Node][javafx.scene.Node] has been processed completely.
@@ -210,19 +227,15 @@ class FXWindow : Initializable {
 		val filterByState = filter.valueFilters.containsKey(SearchFilter.stateKey)
 		val filterByCity = filter.valueFilters.containsKey(SearchFilter.cityKey)
 
-		addressBookExecutor.submit {
+		peopleTable.items queryUpdate {
 			val partialResults = ArrayList<List<Person>>()
-			if (filterByName) partialResults.add(addressBook.fetchPeopleByName(filter.textFilter))
-			if (filterByCountry) partialResults.add(addressBook.fetchCountryByAbbreviation(filter.valueFilters[SearchFilter.countryKey]!!)?.states?.flatMap { it.cities }?.flatMap { it.people } ?: listOf())
-			if (filterByState) partialResults.add(addressBook.fetchStateByAbbreviation(filter.valueFilters[SearchFilter.stateKey]!!)?.cities?.flatMap { it.people } ?: listOf())
-			if (filterByCity) partialResults.add(addressBook.fetchCityByPostalCodeName(filter.valueFilters[SearchFilter.cityKey]!!)?.people ?: listOf())
-			if (partialResults.isEmpty()) partialResults.add(addressBook.fetchAllPeople())
+			if (filterByName) partialResults.add(fetchPeopleByName(filter.textFilter))
+			if (filterByCountry) partialResults.add(fetchCountryByAbbreviation(filter.valueFilters[SearchFilter.countryKey]!!)?.states?.flatMap { it.cities }?.flatMap { it.people } ?: listOf())
+			if (filterByState) partialResults.add(fetchStateByAbbreviation(filter.valueFilters[SearchFilter.stateKey]!!)?.cities?.flatMap { it.people } ?: listOf())
+			if (filterByCity) partialResults.add(fetchCityByPostalCodeName(filter.valueFilters[SearchFilter.cityKey]!!)?.people ?: listOf())
+			if (partialResults.isEmpty()) partialResults.add(fetchAllPeople())
 
-			val result = partialResults.reduce { a, b -> a.intersectList(b) }
-
-			Platform.runLater {
-				peopleTable.items = result.mapTo(FXCollections.observableArrayList()) { FXPerson(it) }
-			}
+			partialResults.reduce { a, b -> a intersectList b }.map { FXPerson(it) }
 		}
 	}
 
@@ -248,7 +261,6 @@ class FXWindow : Initializable {
 		searchCities()
 	}
 
-
 	/**
 	 * Searches for cities in the data source.
 	 *
@@ -262,19 +274,15 @@ class FXWindow : Initializable {
 		val filterByCountry = filter.valueFilters.containsKey(SearchFilter.countryKey)
 		val filterByState = filter.valueFilters.containsKey(SearchFilter.stateKey)
 
-		addressBookExecutor.submit {
+		citiesTable.items  queryUpdate {
 			val partialResults = ArrayList<List<City>>()
-			if (filterByName) partialResults.add(addressBook.fetchCitiesByName(filter.textFilter))
-			if (filterByPostalCode) partialResults.add(addressBook.fetchCitiesByPostalCode(citiesPostalCodeField.text))
-			if (filterByCountry) partialResults.add(addressBook.fetchCountryByAbbreviation(filter.valueFilters[SearchFilter.countryKey]!!)?.states?.flatMap { it.cities } ?: listOf())
-			if (filterByState) partialResults.add(addressBook.fetchStateByAbbreviation(filter.valueFilters[SearchFilter.stateKey]!!)?.cities ?: listOf())
-			if (partialResults.isEmpty()) partialResults.add(addressBook.fetchAllCities())
+			if (filterByName) partialResults.add(fetchCitiesByName(filter.textFilter))
+			if (filterByPostalCode) partialResults.add(fetchCitiesByPostalCode(citiesPostalCodeField.text))
+			if (filterByCountry) partialResults.add(fetchCountryByAbbreviation(filter.valueFilters[SearchFilter.countryKey]!!)?.states?.flatMap { it.cities } ?: listOf())
+			if (filterByState) partialResults.add(fetchStateByAbbreviation(filter.valueFilters[SearchFilter.stateKey]!!)?.cities ?: listOf())
+			if (partialResults.isEmpty()) partialResults.add(fetchAllCities())
 
-			val result = partialResults.reduce { a, b -> a.intersectList(b) }
-
-			Platform.runLater {
-				citiesTable.items = result.mapTo(FXCollections.observableArrayList()) { FXCity(it) }
-			}
+			partialResults.reduce { a, b -> a intersectList b }.map { FXCity(it) }
 		}
 	}
 
@@ -307,22 +315,17 @@ class FXWindow : Initializable {
 		val filterByName = !filter.textFilter.isNullOrBlank()
 		val filterByCountry = filter.valueFilters.containsKey(SearchFilter.countryKey)
 
-		addressBookExecutor.submit {
-			val filterCountryResult = (if (filterByCountry) addressBook.fetchCountryByAbbreviation(filter.valueFilters[SearchFilter.countryKey] ?: "?")?.states else null) ?: listOf()
+		statesTable.items queryUpdate {
+			val filterCountryResult = (if (filterByCountry) fetchCountryByAbbreviation(filter.valueFilters[SearchFilter.countryKey] ?: "?")?.states else null) ?: listOf()
 
-			val result = when {
-				filterByName && filterByCountry -> addressBook.fetchStatesByName(filter.textFilter).intersectList(filterCountryResult)
-				filterByName                    -> addressBook.fetchStatesByName(filter.textFilter)
+			when {
+				filterByName && filterByCountry -> fetchStatesByName(filter.textFilter) intersectList filterCountryResult
+				filterByName                    -> fetchStatesByName(filter.textFilter)
 				filterByCountry                 -> filterCountryResult
-				else                            -> addressBook.fetchAllStates()
-			}
-
-			Platform.runLater {
-				statesTable.items = result.mapTo(FXCollections.observableArrayList()) { FXState(it) }
-			}
+				else                            -> fetchAllStates()
+			}.map { FXState(it) }
 		}
 	}
-
 
 	/**
 	 * Searches for countries in the data source.
@@ -331,14 +334,22 @@ class FXWindow : Initializable {
 	 */
 	fun searchCountries(event: KeyEvent? = null) {
 
+		countriesTable.items queryUpdate {
+			when {
+				!countriesSearchField.text.isNullOrBlank() -> fetchCountriesByName(countriesSearchField.text)
+				else                                       -> fetchAllCountries()
+			}.map { FXCountry(it) }
+		}
+	}
+
+	private infix inline fun <T> MutableList<T>.queryUpdate(crossinline query: AddressBook.() -> List<T>) {
+
 		addressBookExecutor.submit {
-			val result = if (!countriesSearchField.text.isNullOrBlank())
-				addressBook.fetchCountriesByName(countriesSearchField.text)
-			else
-				addressBook.fetchAllCountries()
+			val result = addressBook.query()
 
 			Platform.runLater {
-				countriesTable.items = result.mapTo(FXCollections.observableArrayList()) { FXCountry(it) }
+				clear()
+				addAll(result)
 			}
 		}
 	}

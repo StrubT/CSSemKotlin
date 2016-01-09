@@ -1,204 +1,306 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-						fx:controller="ch.bfh.cssem.kotlin.app.kotlin.FXWindow"
-						fx:id="rootPane"
-						minHeight="500.0" minWidth="700.0"
-						prefHeight="650.0" prefWidth="800.0">
-	<top>
-		<Label fx:id="titleLabel" styleClass="h1" text="CSSem - Address Book in Kotlin" BorderPane.alignment="CENTER" />
-	</top>
-	<center>
-		<TabPane fx:id="tabPane">
-			<Tab fx:id="peopleTab" text="People List" closable="false">
-				<GridPane fx:id="peoplePane">
-					<rowConstraints>
-						<RowConstraints vgrow="NEVER" />
-						<RowConstraints vgrow="NEVER" />
-						<RowConstraints vgrow="ALWAYS" />
-					</rowConstraints>
-					<columnConstraints>
-						<ColumnConstraints hgrow="NEVER" />
-						<ColumnConstraints hgrow="NEVER" />
-						<ColumnConstraints hgrow="ALWAYS" />
-					</columnConstraints>
-					<Label fx:id="peopleTitleLabel" styleClass="h2" text="People" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="3" />
-					<Label fx:id="peopleSearchLabel" text="Filter:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-					<TextField fx:id="peopleSearchField" promptText="search filter" onKeyReleased="#searchPeople" GridPane.rowIndex="1" GridPane.columnIndex="1" />
-					<TableView fx:id="peopleTable" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="3">
-						<columns>
-							<TableColumn text="First Name" prefWidth="175">
-								<cellValueFactory>
-									<PropertyValueFactory property="firstName" />
-								</cellValueFactory>
-							</TableColumn>
-							<TableColumn text="Last Name" prefWidth="175">
-								<cellValueFactory>
-									<PropertyValueFactory property="lastName" />
-								</cellValueFactory>
-							</TableColumn>
-							<TableColumn text="Address" prefWidth="350">
-								<cellValueFactory>
-									<PropertyValueFactory property="address" />
-								</cellValueFactory>
-							</TableColumn>
-							<TableColumn text="E-Mail Address/es" prefWidth="350">
-								<cellValueFactory>
-									<PropertyValueFactory property="email" />
-								</cellValueFactory>
-							</TableColumn>
-							<TableColumn text="Telephone Number/s" prefWidth="350">
-								<cellValueFactory>
-									<PropertyValueFactory property="phone" />
-								</cellValueFactory>
-							</TableColumn>
-						</columns>
-					</TableView>
-				</GridPane>
-			</Tab>
-			<Tab fx:id="citiesTab" text="Cities" closable="false">
-				<GridPane fx:id="citiesPane">
-					<rowConstraints>
-						<RowConstraints vgrow="NEVER" />
-						<RowConstraints vgrow="NEVER" />
-						<RowConstraints vgrow="ALWAYS" />
-					</rowConstraints>
-					<columnConstraints>
-						<ColumnConstraints hgrow="NEVER" />
-						<ColumnConstraints hgrow="NEVER" />
-						<ColumnConstraints hgrow="NEVER" />
-						<ColumnConstraints hgrow="NEVER" />
-						<ColumnConstraints hgrow="ALWAYS" />
-					</columnConstraints>
-					<Label fx:id="citiesTitleLabel" styleClass="h2" text="Cities" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="5" />
-					<Label fx:id="citiesPostalCodeLabel" text="Postal Code:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-					<TextField fx:id="citiesPostalCodeField" promptText="postal code filter" onKeyReleased="#searchCities" GridPane.rowIndex="1" GridPane.columnIndex="1" />
-					<Label fx:id="citiesSearchLabel" text="Filter:" GridPane.rowIndex="1" GridPane.columnIndex="2" />
-					<TextField fx:id="citiesSearchField" promptText="search filter" onKeyReleased="#searchCities" GridPane.rowIndex="1" GridPane.columnIndex="3" />
-					<TableView fx:id="citiesTable" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="5">
-						<columns>
-							<TableColumn text="Postal Code" prefWidth="100">
-								<cellValueFactory>
-									<PropertyValueFactory property="postalCode" />
-								</cellValueFactory>
-							</TableColumn>
-							<TableColumn text="Name" prefWidth="200">
-								<cellValueFactory>
-									<PropertyValueFactory property="name" />
-								</cellValueFactory>
-							</TableColumn>
-							<TableColumn text="State" prefWidth="200">
-								<cellValueFactory>
-									<PropertyValueFactory property="stateName" />
-								</cellValueFactory>
-							</TableColumn>
-							<TableColumn text="Country" prefWidth="200">
-								<cellValueFactory>
-									<PropertyValueFactory property="countryName" />
-								</cellValueFactory>
-							</TableColumn>
-							<TableColumn text="#People" prefWidth="50">
-								<cellValueFactory>
-									<PropertyValueFactory property="nofPeople" />
-								</cellValueFactory>
-							</TableColumn>
-						</columns>
-					</TableView>
-				</GridPane>
-			</Tab>
-			<Tab fx:id="statesTab" text="States" closable="false">
-				<GridPane fx:id="statesPane">
-					<rowConstraints>
-						<RowConstraints vgrow="NEVER" />
-						<RowConstraints vgrow="NEVER" />
-						<RowConstraints vgrow="ALWAYS" />
-					</rowConstraints>
-					<columnConstraints>
-						<ColumnConstraints hgrow="NEVER" />
-						<ColumnConstraints hgrow="NEVER" />
-						<ColumnConstraints hgrow="ALWAYS" />
-					</columnConstraints>
-					<Label fx:id="statesTitleLabel" styleClass="h2" text="States" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="3" />
-					<Label fx:id="statesSearchLabel" text="Filter:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-					<TextField fx:id="statesSearchField" promptText="search filter" onKeyReleased="#searchStates" GridPane.rowIndex="1" GridPane.columnIndex="1" />
-					<TableView fx:id="statesTable" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="3">
-						<columns>
-							<TableColumn text="Abbreviation" prefWidth="100">
-								<cellValueFactory>
-									<PropertyValueFactory property="abbreviation" />
-								</cellValueFactory>
-							</TableColumn>
-							<TableColumn text="Name" prefWidth="350">
-								<cellValueFactory>
-									<PropertyValueFactory property="name" />
-								</cellValueFactory>
-							</TableColumn>
-							<TableColumn text="Country" prefWidth="350">
-								<cellValueFactory>
-									<PropertyValueFactory property="countryName" />
-								</cellValueFactory>
-							</TableColumn>
-							<TableColumn text="#Cities" prefWidth="50">
-								<cellValueFactory>
-									<PropertyValueFactory property="nofCities" />
-								</cellValueFactory>
-							</TableColumn>
-						</columns>
-					</TableView>
-				</GridPane>
-			</Tab>
-			<Tab fx:id="countriesTab" text="Countries" closable="false">
-				<GridPane fx:id="countriesPane">
-					<rowConstraints>
-						<RowConstraints vgrow="NEVER" />
-						<RowConstraints vgrow="NEVER" />
-						<RowConstraints vgrow="ALWAYS" />
-					</rowConstraints>
-					<columnConstraints>
-						<ColumnConstraints hgrow="NEVER" />
-						<ColumnConstraints hgrow="NEVER" />
-						<ColumnConstraints hgrow="ALWAYS" />
-					</columnConstraints>
-					<Label fx:id="countriesTitleLabel" styleClass="h2" text="Countries" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="3" />
-					<Label fx:id="countriesSearchLabel" text="Filter:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-					<TextField fx:id="countriesSearchField" promptText="search filter" onKeyReleased="#searchCountries" GridPane.rowIndex="1" GridPane.columnIndex="1" />
-					<TableView fx:id="countriesTable" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="3">
-						<columns>
-							<TableColumn text="Abbreviation" prefWidth="100">
-								<cellValueFactory>
-									<PropertyValueFactory property="abbreviation" />
-								</cellValueFactory>
-							</TableColumn>
-							<TableColumn text="Name" prefWidth="350">
-								<cellValueFactory>
-									<PropertyValueFactory property="name" />
-								</cellValueFactory>
-							</TableColumn>
-							<TableColumn text="#Cities" prefWidth="50">
-								<cellValueFactory>
-									<PropertyValueFactory property="nofCities" />
-								</cellValueFactory>
-							</TableColumn>
-							<TableColumn text="#States" prefWidth="50">
-								<cellValueFactory>
-									<PropertyValueFactory property="nofStates" />
-								</cellValueFactory>
-							</TableColumn>
-						</columns>
-					</TableView>
-				</GridPane>
-			</Tab>
-		</TabPane>
-	</center>
-</BorderPane>
+<?import javafx.scene.layout.*?>
+<StackPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+					 fx:controller="ch.bfh.cssem.kotlin.app.kotlin.FXWindow"
+					 fx:id="rootPane"
+					 minHeight="500.0" minWidth="700.0"
+					 prefHeight="650.0" prefWidth="800.0">
+
+	<BorderPane fx:id="contentPane">
+
+		<top>
+			<Label fx:id="titleLabel" styleClass="h1" text="CSSem - Address Book in Kotlin" BorderPane.alignment="CENTER" />
+		</top>
+
+		<center>
+
+			<TabPane fx:id="tabPane">
+
+				<Tab fx:id="peopleTab" text="People List" closable="false">
+
+					<GridPane fx:id="peoplePane">
+
+						<rowConstraints>
+							<RowConstraints vgrow="NEVER" />
+							<RowConstraints vgrow="NEVER" />
+							<RowConstraints vgrow="ALWAYS" />
+						</rowConstraints>
+
+						<columnConstraints>
+							<ColumnConstraints hgrow="NEVER" />
+							<ColumnConstraints hgrow="NEVER" />
+							<ColumnConstraints hgrow="ALWAYS" />
+						</columnConstraints>
+
+						<Label fx:id="peopleTitleLabel" styleClass="h2" text="People" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="3" />
+
+						<Label fx:id="peopleSearchLabel" text="Filter:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+						<TextField fx:id="peopleSearchField" promptText="search filter" onKeyReleased="#searchPeople" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+						<TableView fx:id="peopleTable" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="3">
+
+							<columns>
+
+								<TableColumn text="First Name" prefWidth="175">
+									<cellValueFactory>
+										<PropertyValueFactory property="firstName" />
+									</cellValueFactory>
+								</TableColumn>
+
+								<TableColumn text="Last Name" prefWidth="175">
+									<cellValueFactory>
+										<PropertyValueFactory property="lastName" />
+									</cellValueFactory>
+								</TableColumn>
+
+								<TableColumn text="Address" prefWidth="350">
+									<cellValueFactory>
+										<PropertyValueFactory property="address" />
+									</cellValueFactory>
+								</TableColumn>
+
+								<TableColumn text="E-Mail Address/es" prefWidth="350">
+									<cellValueFactory>
+										<PropertyValueFactory property="email" />
+									</cellValueFactory>
+								</TableColumn>
+
+								<TableColumn text="Telephone Number/s" prefWidth="350">
+									<cellValueFactory>
+										<PropertyValueFactory property="phone" />
+									</cellValueFactory>
+								</TableColumn>
+							</columns>
+						</TableView>
+					</GridPane>
+				</Tab>
+
+				<Tab fx:id="citiesTab" text="Cities" closable="false">
+
+					<GridPane fx:id="citiesPane">
+
+						<rowConstraints>
+							<RowConstraints vgrow="NEVER" />
+							<RowConstraints vgrow="NEVER" />
+							<RowConstraints vgrow="ALWAYS" />
+						</rowConstraints>
+
+						<columnConstraints>
+							<ColumnConstraints hgrow="NEVER" />
+							<ColumnConstraints hgrow="NEVER" />
+							<ColumnConstraints hgrow="NEVER" />
+							<ColumnConstraints hgrow="NEVER" />
+							<ColumnConstraints hgrow="ALWAYS" />
+						</columnConstraints>
+
+						<Label fx:id="citiesTitleLabel" styleClass="h2" text="Cities" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="5" />
+
+						<Label fx:id="citiesPostalCodeLabel" text="Postal Code:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+						<TextField fx:id="citiesPostalCodeField" promptText="postal code filter" onKeyReleased="#searchCities" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+						<Label fx:id="citiesSearchLabel" text="Filter:" GridPane.rowIndex="1" GridPane.columnIndex="2" />
+						<TextField fx:id="citiesSearchField" promptText="search filter" onKeyReleased="#searchCities" GridPane.rowIndex="1" GridPane.columnIndex="3" />
+
+						<TableView fx:id="citiesTable" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="5">
+							<columns>
+
+								<TableColumn text="Postal Code" prefWidth="100">
+									<cellValueFactory>
+										<PropertyValueFactory property="postalCode" />
+									</cellValueFactory>
+								</TableColumn>
+
+								<TableColumn text="Name" prefWidth="200">
+									<cellValueFactory>
+										<PropertyValueFactory property="name" />
+									</cellValueFactory>
+								</TableColumn>
+
+								<TableColumn text="State" prefWidth="200">
+									<cellValueFactory>
+										<PropertyValueFactory property="stateName" />
+									</cellValueFactory>
+								</TableColumn>
+
+								<TableColumn text="Country" prefWidth="200">
+									<cellValueFactory>
+										<PropertyValueFactory property="countryName" />
+									</cellValueFactory>
+								</TableColumn>
+
+								<TableColumn text="#People" prefWidth="50">
+									<cellValueFactory>
+										<PropertyValueFactory property="nofPeople" />
+									</cellValueFactory>
+								</TableColumn>
+							</columns>
+						</TableView>
+					</GridPane>
+				</Tab>
+
+				<Tab fx:id="statesTab" text="States" closable="false">
+
+					<GridPane fx:id="statesPane">
+
+						<rowConstraints>
+							<RowConstraints vgrow="NEVER" />
+							<RowConstraints vgrow="NEVER" />
+							<RowConstraints vgrow="ALWAYS" />
+						</rowConstraints>
+
+						<columnConstraints>
+							<ColumnConstraints hgrow="NEVER" />
+							<ColumnConstraints hgrow="NEVER" />
+							<ColumnConstraints hgrow="ALWAYS" />
+						</columnConstraints>
+
+						<Label fx:id="statesTitleLabel" styleClass="h2" text="States" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="3" />
+
+						<Label fx:id="statesSearchLabel" text="Filter:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+						<TextField fx:id="statesSearchField" promptText="search filter" onKeyReleased="#searchStates" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+						<TableView fx:id="statesTable" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="3">
+							<columns>
+
+								<TableColumn text="Abbreviation" prefWidth="100">
+									<cellValueFactory>
+										<PropertyValueFactory property="abbreviation" />
+									</cellValueFactory>
+								</TableColumn>
+
+								<TableColumn text="Name" prefWidth="350">
+									<cellValueFactory>
+										<PropertyValueFactory property="name" />
+									</cellValueFactory>
+								</TableColumn>
+
+								<TableColumn text="Country" prefWidth="350">
+									<cellValueFactory>
+										<PropertyValueFactory property="countryName" />
+									</cellValueFactory>
+								</TableColumn>
+
+								<TableColumn text="#Cities" prefWidth="50">
+									<cellValueFactory>
+										<PropertyValueFactory property="nofCities" />
+									</cellValueFactory>
+								</TableColumn>
+							</columns>
+						</TableView>
+					</GridPane>
+				</Tab>
+
+				<Tab fx:id="countriesTab" text="Countries" closable="false">
+
+					<GridPane fx:id="countriesPane">
+
+						<rowConstraints>
+							<RowConstraints vgrow="NEVER" />
+							<RowConstraints vgrow="NEVER" />
+							<RowConstraints vgrow="ALWAYS" />
+						</rowConstraints>
+
+						<columnConstraints>
+							<ColumnConstraints hgrow="NEVER" />
+							<ColumnConstraints hgrow="NEVER" />
+							<ColumnConstraints hgrow="ALWAYS" />
+						</columnConstraints>
+
+						<Label fx:id="countriesTitleLabel" styleClass="h2" text="Countries" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="3" />
+
+						<Label fx:id="countriesSearchLabel" text="Filter:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+						<TextField fx:id="countriesSearchField" promptText="search filter" onKeyReleased="#searchCountries" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+						<TableView fx:id="countriesTable" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="3">
+							<columns>
+
+								<TableColumn text="Abbreviation" prefWidth="100">
+									<cellValueFactory>
+										<PropertyValueFactory property="abbreviation" />
+									</cellValueFactory>
+								</TableColumn>
+
+								<TableColumn text="Name" prefWidth="350">
+									<cellValueFactory>
+										<PropertyValueFactory property="name" />
+									</cellValueFactory>
+								</TableColumn>
+
+								<TableColumn text="#Cities" prefWidth="50">
+									<cellValueFactory>
+										<PropertyValueFactory property="nofCities" />
+									</cellValueFactory>
+								</TableColumn>
+
+								<TableColumn text="#States" prefWidth="50">
+									<cellValueFactory>
+										<PropertyValueFactory property="nofStates" />
+									</cellValueFactory>
+								</TableColumn>
+							</columns>
+						</TableView>
+					</GridPane>
+				</Tab>
+			</TabPane>
+		</center>
+	</BorderPane>
+
+	<FlowPane fx:id="personEditContainerPane" styleClass="overlayBackground" visible="false" alignment="CENTER">
+
+		<GridPane fx:id="personEditPane" styleClass="overlayContent">
+
+			<rowConstraints>
+				<RowConstraints vgrow="NEVER" />
+				<RowConstraints vgrow="NEVER" />
+				<RowConstraints vgrow="NEVER" />
+				<RowConstraints vgrow="NEVER" />
+				<RowConstraints vgrow="NEVER" />
+			</rowConstraints>
+
+			<columnConstraints>
+				<ColumnConstraints hgrow="NEVER" />
+				<ColumnConstraints hgrow="ALWAYS" />
+				<ColumnConstraints hgrow="NEVER" />
+				<ColumnConstraints hgrow="ALWAYS" />
+			</columnConstraints>
+
+			<Label fx:id="personEditTitleLabel" styleClass="h2" text="Create Person" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="3" />
+
+			<Label fx:id="personEditLastNameLabel" text="Last Name:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+			<TextField fx:id="personEditLastNameField" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+			<Label fx:id="personEditFirstNameLabel" text="First Name:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+			<TextField fx:id="personEditFirstNameField" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+			<Label fx:id="personEditStreetLabel" text="Street:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+			<TextField fx:id="personEditStreetField" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+			<Label fx:id="personEditCityLabel" text="City:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+			<ComboBox fx:id="personEditCityCombo" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+
+			<Label fx:id="personEditEmailPrivateLabel" text="E-Mail Address (Private):" GridPane.rowIndex="1" GridPane.columnIndex="2" />
+			<TextField fx:id="personEditEmailPrivateField" GridPane.rowIndex="1" GridPane.columnIndex="3" />
+
+			<Label fx:id="personEditEmailWorkLabel" text="E-Mail Address (Work):" GridPane.rowIndex="2" GridPane.columnIndex="2" />
+			<TextField fx:id="personEditEmailWorkField" GridPane.rowIndex="2" GridPane.columnIndex="3" />
+
+			<Label fx:id="personEditPhoneHomeLabel" text="Telephone Number (Home):" GridPane.rowIndex="3" GridPane.columnIndex="2" />
+			<TextField fx:id="personEditPhoneHomeField" GridPane.rowIndex="3" GridPane.columnIndex="3" />
+
+			<Label fx:id="personEditPhoneMobileLabel" text="Telephone Number (Mobile):" GridPane.rowIndex="4" GridPane.columnIndex="2" />
+			<TextField fx:id="personEditPhoneMobileField" GridPane.rowIndex="4" GridPane.columnIndex="3" />
+
+			<Label fx:id="personEditPhoneWorkLabel" text="Telephone Number (Work):" GridPane.rowIndex="5" GridPane.columnIndex="2" />
+			<TextField fx:id="personEditPhoneWorkField" GridPane.rowIndex="5" GridPane.columnIndex="3" />
+		</GridPane>
+	</FlowPane>
+</StackPane>

@@ -44,9 +44,12 @@
         <option name="HTML_DO_NOT_INDENT_CHILDREN_OF" value="" />
         <CssCodeStyleSettings>
           <option name="HEX_COLOR_UPPER_CASE" value="true" />
-          <option name="BLANK_LINES_BETWEEN_BLOCKS" value="0" />
           <option name="KEEP_SINGLE_LINE_BLOCKS" value="true" />
         </CssCodeStyleSettings>
+        <JSON>
+          <option name="OBJECT_WRAPPING" value="1" />
+          <option name="ARRAY_WRAPPING" value="1" />
+        </JSON>
         <JavaCodeStyleSettings>
           <option name="ALIGN_MULTILINE_ANNOTATION_PARAMETERS" value="true" />
           <option name="CLASS_NAMES_IN_JAVADOC" value="3" />
