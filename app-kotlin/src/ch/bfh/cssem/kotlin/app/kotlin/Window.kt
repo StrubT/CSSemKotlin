@@ -12,6 +12,7 @@ import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.FXState
 import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.fetchCityByPostalCodeName
 import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.fetchStateByAbbreviation
 import javafx.application.Platform
+import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
 import javafx.scene.Scene
@@ -23,12 +24,14 @@ import javafx.scene.control.TableRow
 import javafx.scene.control.TableView
 import javafx.scene.control.TextField
 import javafx.scene.input.KeyEvent
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.FlowPane
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.StackPane
 import javafx.stage.Stage
 import javafx.stage.WindowEvent
+import javafx.util.Callback
 import java.net.URL
 import java.util.ArrayList
 import java.util.ResourceBundle
@@ -143,18 +146,22 @@ class FXWindow : Initializable {
 	 */
 	override fun initialize(location: URL?, resources: ResourceBundle?) {
 
-		citiesTable.setRowFactory {
-			val row = TableRow<FXCity>()
-			row.setOnMouseClicked { event ->
-				if (event.clickCount == 2 && !row.isEmpty)
-					filterPeople(row.item)
+		citiesTable.rowFactory = object : Callback<TableView<FXCity>, TableRow<FXCity>> {
+			override fun call(param: TableView<FXCity>?): TableRow<FXCity>? {
+				val row = TableRow<FXCity>()
+				row.onMouseClicked = object : EventHandler<MouseEvent> {
+					override fun handle(event: MouseEvent) {
+						if (event.clickCount == 2 && !row.isEmpty)
+							filterPeople(row.item)
+					}
+				}
+				return row
 			}
-			row
 		}
 
-		statesTable.setRowFactory {
+		statesTable.rowFactory = Callback {
 			val row = TableRow<FXState>()
-			row.setOnMouseClicked { event ->
+			row.onMouseClicked = EventHandler { event ->
 				if (event.clickCount == 2 && !row.isEmpty) {
 					filterPeople(state = row.item)
 					filterCities(row.item)
