@@ -27,7 +27,7 @@ fun main(vararg args: String) {
  *
  * @author strut1 & touwm1
  */
-class FXApplication() : Application() {
+class FXApplication : Application() {
 
 	/**
 	 * Starts the JavaFX [Application].
@@ -36,16 +36,13 @@ class FXApplication() : Application() {
 	override fun start(primaryStage: Stage) {
 
 		val loader = FXMLLoader()
-		val root = FXResources.fxml.openStream().use { loader.load<Parent>(it) }
-		val controller = loader.getController<FXWindow>()
-
-		val scene = Scene(root)
-		primaryStage.scene = scene
 
 		primaryStage.icons.add(Image(FXResources.logo.toExternalForm()))
-		scene.stylesheets.add(FXResources.stylesheet.toExternalForm())
 
-		controller.initialize(primaryStage, scene)
+		primaryStage.scene = Scene(FXResources.fxml.openStream().use { loader.load<Parent>(it) })
+		primaryStage.scene.stylesheets.add(FXResources.stylesheet.toExternalForm())
+
+		loader.getController<FXWindow>().initialize(primaryStage, primaryStage.scene)
 		primaryStage.show()
 	}
 }

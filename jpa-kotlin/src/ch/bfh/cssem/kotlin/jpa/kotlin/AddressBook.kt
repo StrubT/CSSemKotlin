@@ -1,6 +1,11 @@
+@file:JvmName("Util")
+@file:JvmMultifileClass
+
 package ch.bfh.cssem.kotlin.jpa.kotlin
 
+import javax.persistence.EntityManager
 import javax.persistence.Persistence
+import javax.persistence.PersistenceException
 import ch.bfh.cssem.kotlin.api.AddressBook as ApiAddressBook
 import ch.bfh.cssem.kotlin.api.City as ApiCity
 import ch.bfh.cssem.kotlin.api.Country as ApiCountry
@@ -26,14 +31,14 @@ class AddressBook : ApiAddressBook {
 	 *
 	 * @return the [PersistentEntity] with the specified unique identifier; or null, if none
 	 */
-	inline fun <reified E : PersistentEntity> findById(id: Int?): E? = entityManager.find(E::class.java, id)
+	protected inline fun <reified E : PersistentEntity> findById(id: Int?): E? = entityManager.find(E::class.java, id)
 
 	/**
 	 * Finds all [PersistentEntities][PersistentEntity] in the [entityManager].
 	 *
 	 * @return a [List] containing all [PersistentEntities][PersistentEntity]
 	 */
-	inline fun <reified E : PersistentEntity> findAll(pageIndex: Int = 0, pageSize: Int? = null): List<E> {
+	protected inline fun <reified E : PersistentEntity> findAll(pageIndex: Int = 0, pageSize: Int? = null): List<E> {
 
 		val criteriaQuery = entityManager.criteriaBuilder.createQuery(E::class.java)
 		val query = entityManager.createQuery(criteriaQuery.select(criteriaQuery.from(E::class.java)))
@@ -69,7 +74,7 @@ class AddressBook : ApiAddressBook {
 	 *
 	 * @param entity entity to persist
 	 */
-	fun <E : PersistentEntity> persist(entity: E) = entityManager.persist(entity)
+	protected fun <E : PersistentEntity> persist(entity: E) = entityManager.transact { persist(entity) }
 
 	/**
 	 * Merges a [PersistentEntity] into the [entityManager].
@@ -78,7 +83,7 @@ class AddressBook : ApiAddressBook {
 	 *
 	 * @return merged [PersistentEntity]
 	 */
-	fun <E : PersistentEntity> merge(entity: E) = entityManager.merge(entity)!!
+	protected fun <E : PersistentEntity> merge(entity: E) = entityManager.transact { merge(entity)!! }
 
 	/**
 	 * Persists or merges a [PersistentEntity] in/into the [entityManager].
@@ -89,10 +94,11 @@ class AddressBook : ApiAddressBook {
 	 */
 	protected fun <E : PersistentEntity> persistMerge(entity: E): E {
 
-		return if (entity.id ?: 0 <= 0) {
-			persist(entity); entity
-		} else
+		return if (entity.status === PersistenceStatus.PERSISTENT)
 			merge(entity)
+		else {
+			persist(entity); entity
+		}
 	}
 
 	/**
@@ -100,7 +106,7 @@ class AddressBook : ApiAddressBook {
 	 *
 	 * @param entity entity to remove
 	 */
-	fun <E : PersistentEntity> remove(entity: E) = entityManager.remove(entity)
+	protected fun <E : PersistentEntity> remove(entity: E) = entityManager.transact { remove(entity) }
 
 	override fun fetchAllPeople() = findByQuery<Person>(Person.findAll)
 
@@ -162,8 +168,23 @@ class AddressBook : ApiAddressBook {
 }
 
 /**
- * Turns the text into a MySQL filter string.
+ * Runs a certain operation inside a transactions.
  *
- * @return MySQL filter string to use in a [like](http://dev.mysql.com/doc/en/string-comparison-functions.html#operator_like) comparison.
+ * @param operation operation to run inside a transaction
  */
-fun String.makeFilter() = "%${replace(Regex("[^a-z0-9]+", RegexOption.IGNORE_CASE), "%").trim('%')}%"
+inline fun <T> EntityManager.transact(operation: EntityManager.() -> T): T {
+
+	with (transaction) {
+		try {
+			begin()
+			val result = operation()
+			commit()
+
+			return result
+
+		} catch (ex: Exception) {
+			rollback()
+			throw PersistenceException("Could not successfully complete transaction.", ex)
+		}
+	}
+}

@@ -72,6 +72,8 @@ import java.util.concurrent.Executors
  */
 class FXWindow : Initializable {
 
+	//region FXML properties
+
 	@FXML protected lateinit var rootPane: StackPane
 	@FXML protected lateinit var contentPane: BorderPane
 	@FXML protected lateinit var titleLabel: Label
@@ -123,9 +125,18 @@ class FXWindow : Initializable {
 	@FXML protected lateinit var personEditPhoneMobileField: TextField
 	@FXML protected lateinit var personEditPhoneWorkLabel: Label
 	@FXML protected lateinit var personEditPhoneWorkField: TextField
+	//endregion
 
 	private val addressBook = ServiceLoader.load(AddressBook::class.java).single()
 	private val addressBookExecutor = Executors.newSingleThreadExecutor()
+
+	/**
+	 * Initialises the [Window][javafx.stage.Window] controller after the instance is created.
+	 */
+	init {
+
+		//...
+	}
 
 	/**
 	 * Initialises the [Window][javafx.stage.Window] controller after the root [Node][javafx.scene.Node] has been processed completely.
@@ -172,6 +183,9 @@ class FXWindow : Initializable {
 
 	/**
 	 * Initialises the [Stage] and [Scene] with data from the [FXML] file.
+	 *
+	 * @param stage [Stage] to initialise
+	 * @param scene [Scene] to initialise
 	 */
 	fun initialize(stage: Stage, scene: Scene) {
 
