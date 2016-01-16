@@ -6,32 +6,31 @@ fun cube(base: Double) = power(base, 3.0)
 
 fun factorialRecursive(n: Int): Long = if (n in 0..1) 1 else if (n > 0) n * factorialRecursive(n - 1) else throw IllegalArgumentException("Cannot calculate factorial of negative numbers.")
 
-fun factorialLoopV1(n: Int): Long {
-	if (n in 0..1) return 1
-	else if (n < 0) throw IllegalArgumentException("Cannot calculate factorial of negative numbers.")
+//fun factorialLoop(n: Int): Long {
+//	if (n in 0..1) return 1
+//	else if (n < 0) throw IllegalArgumentException("Cannot calculate factorial of negative numbers.")
+//
+//	var fac = n
+//	var res = 1L
+//	do res *= fac--
+//	while (fac > 1)
+//
+//	return res
+//}
 
-	var fac = n
-	var res = 1L
-	do
-		res *= fac--
-	while (fac > 1)
+//fun factorialLoop(n: Int): Long {
+//	if (n in 0..1) return 1
+//	else if (n < 0) throw IllegalArgumentException("Cannot calculate factorial of negative numbers.")
+//
+//	var fac = n
+//	var res = fac--.toLong()
+//	while (fac > 1)
+//		res *= fac--
+//
+//	return res
+//}
 
-	return res
-}
-
-fun factorialLoopV2(n: Int): Long {
-	if (n in 0..1) return 1
-	else if (n < 0) throw IllegalArgumentException("Cannot calculate factorial of negative numbers.")
-
-	var fac = n
-	var res = fac--.toLong()
-	while (fac > 1)
-		res *= fac--
-
-	return res
-}
-
-fun factorialLoopV3(n: Int): Long {
+fun factorialLoop(n: Int): Long {
 	if (n in 0..1) return 1
 	else if (n < 0) throw IllegalArgumentException("Cannot calculate factorial of negative numbers.")
 

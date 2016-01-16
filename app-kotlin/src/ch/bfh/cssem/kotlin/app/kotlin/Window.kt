@@ -3,14 +3,12 @@ package ch.bfh.cssem.kotlin.app.kotlin
 import ch.bfh.cssem.kotlin.api.AddressBook
 import ch.bfh.cssem.kotlin.api.City
 import ch.bfh.cssem.kotlin.api.Country
-import ch.bfh.cssem.kotlin.api.Person
 import ch.bfh.cssem.kotlin.api.State
 import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.FXCity
 import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.FXCountry
 import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.FXPerson
+import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.FXPersonI18n
 import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.FXState
-import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.fetchCityByPostalCodeName
-import ch.bfh.cssem.kotlin.app.kotlin.ApiExtensions.fetchStateByAbbreviation
 import javafx.application.Platform
 import javafx.event.EventHandler
 import javafx.fxml.FXML
@@ -34,6 +32,7 @@ import javafx.stage.WindowEvent
 import javafx.util.Callback
 import java.net.URL
 import java.util.ArrayList
+import java.util.NoSuchElementException
 import java.util.ResourceBundle
 import java.util.ServiceLoader
 import java.util.concurrent.Executors
@@ -163,7 +162,7 @@ class FXWindow : Initializable {
 			val row = TableRow<FXState>()
 			row.onMouseClicked = EventHandler { event ->
 				if (event.clickCount == 2 && !row.isEmpty) {
-					filterPeople(state = row.item)
+					filterPeople(row.item)
 					filterCities(row.item)
 				}
 			}
@@ -174,8 +173,8 @@ class FXWindow : Initializable {
 			val row = TableRow<FXCountry>()
 			row.setOnMouseClicked { event ->
 				if (event.clickCount == 2 && !row.isEmpty) {
-					filterPeople(country = row.item)
-					filterCities(country = row.item)
+					filterPeople(row.item)
+					filterCities(row.item)
 					filterStates(row.item)
 				}
 			}
@@ -210,26 +209,20 @@ class FXWindow : Initializable {
 	/**
 	 * Applies special filters to the people table.
 	 *
-	 * @param city    city to filter people by
-	 * @param state   state to filter people by
-	 * @param country country to filter people by
+	 * @param filter filter to apply to the people table
 	 */
-	fun filterPeople(city: City? = null, state: State? = null, country: Country? = null) {
+	fun filterPeople(filter: Any? = null) {
 
-		val filter = peopleSearchField.text.filter
-		if (city !== null) {
-			filter.valueFilters.remove(SearchFilter.countryKey)
-			filter.valueFilters.remove(SearchFilter.stateKey)
-			filter.valueFilters.put(SearchFilter.cityKey, "${city.postalCode}-${city.name}")
+		val searchFilter = peopleSearchField.text.filter
+		searchFilter.valueFilters.clear()
+		when (filter) {
+			is City    -> searchFilter.valueFilters.put(SearchFilter.cityKey, "${filter.postalCode}-${filter.name}")
+			is State   -> searchFilter.valueFilters.put(SearchFilter.stateKey, "${filter.country.abbreviation}-${filter.abbreviation}")
+			is Country -> searchFilter.valueFilters.put(SearchFilter.countryKey, filter.abbreviation)
+			else       -> throw IllegalArgumentException("The filter of type '${filter?.javaClass}' is not available for people.")
+		}
 
-		} else if (state !== null) {
-			filter.valueFilters.remove(SearchFilter.countryKey)
-			filter.valueFilters.put(SearchFilter.stateKey, "${state.country.abbreviation}-${state.abbreviation}")
-
-		} else if (country !== null)
-			filter.valueFilters.put(SearchFilter.countryKey, country.abbreviation)
-
-		peopleSearchField.text = filter.combined
+		peopleSearchField.text = searchFilter.combined
 
 		tabPane.selectionModel.select(peopleTab)
 		searchPeople()
@@ -243,40 +236,37 @@ class FXWindow : Initializable {
 	fun searchPeople(event: KeyEvent? = null) {
 
 		val filter = peopleSearchField.text.filter
-		val filterByName = !filter.textFilter.isNullOrBlank()
-		val filterByCountry = filter.valueFilters.containsKey(SearchFilter.countryKey)
-		val filterByState = filter.valueFilters.containsKey(SearchFilter.stateKey)
-		val filterByCity = filter.valueFilters.containsKey(SearchFilter.cityKey)
 
 		peopleTable.items queryUpdate {
-			val partialResults = ArrayList<List<Person>>()
-			if (filterByName) partialResults.add(fetchPeopleByName(filter.textFilter))
-			if (filterByCountry) partialResults.add(fetchCountryByAbbreviation(filter.valueFilters[SearchFilter.countryKey]!!)?.states?.flatMap { it.cities }?.flatMap { it.people } ?: listOf())
-			if (filterByState) partialResults.add(fetchStateByAbbreviation(filter.valueFilters[SearchFilter.stateKey]!!)?.cities?.flatMap { it.people } ?: listOf())
-			if (filterByCity) partialResults.add(fetchCityByPostalCodeName(filter.valueFilters[SearchFilter.cityKey]!!)?.people ?: listOf())
-			if (partialResults.isEmpty()) partialResults.add(fetchAllPeople())
+			var people = if (!filter.textFilter.isNullOrBlank()) fetchPeopleByName(filter.textFilter) else fetchAllPeople()
 
-			partialResults.reduce { a, b -> a intersectList b }.map { FXPerson(it) }
+			for ((key, flt) in filter.valueFilters)
+				when (key) {
+					SearchFilter.countryKey -> people = people.filter { it.city?.country?.abbreviation == flt }
+					SearchFilter.stateKey   -> people = people.filter { val (country, state) = flt.splitPair('-'); it.city?.country?.abbreviation == country && it.city?.state?.abbreviation == state }
+					SearchFilter.cityKey    -> people = people.filter { val (postalCode, name) = flt.splitPair('-'); it.city?.postalCode == postalCode && it.city?.name == name }
+					else                    -> throw NoSuchElementException("The filter '$key' is not available for people.")
+				}
+
+			people.map { FXPersonI18n.CH(it) }
 		}
 	}
 
 	/**
 	 * Applies special filters to the city table.
 	 *
-	 * @param state   state to filter cities by
-	 * @param country country to filter cities by
+	 * @param filter filter to apply to the cities table
 	 */
-	fun filterCities(state: State? = null, country: Country? = null) {
+	fun filterCities(filter: Any? = null) {
 
-		val filter = citiesSearchField.text.filter
-		if (state !== null) {
-			filter.valueFilters.remove(SearchFilter.countryKey)
-			filter.valueFilters.put(SearchFilter.stateKey, "${state.country.abbreviation}-${state.abbreviation}")
-
-		} else if (country !== null)
-			filter.valueFilters.put(SearchFilter.countryKey, country.abbreviation)
-
-		citiesSearchField.text = filter.combined
+		val searchFilter = citiesSearchField.text.filter
+		searchFilter.valueFilters.clear()
+		when (filter) {
+			is State   -> searchFilter.valueFilters.put(SearchFilter.stateKey, "${filter.country.abbreviation}-${filter.abbreviation}")
+			is Country -> searchFilter.valueFilters.put(SearchFilter.countryKey, filter.abbreviation)
+			else       -> throw IllegalArgumentException("The filter of type '${filter?.javaClass}' is not available for cities.")
+		}
+		citiesSearchField.text = searchFilter.combined
 
 		tabPane.selectionModel.select(citiesTab)
 		searchCities()
@@ -290,35 +280,39 @@ class FXWindow : Initializable {
 	fun searchCities(event: KeyEvent? = null) {
 
 		val filter = citiesSearchField.text.filter
-		val filterByName = !filter.textFilter.isNullOrBlank()
-		val filterByPostalCode = !citiesPostalCodeField.text.isNullOrBlank()
-		val filterByCountry = filter.valueFilters.containsKey(SearchFilter.countryKey)
-		val filterByState = filter.valueFilters.containsKey(SearchFilter.stateKey)
 
-		citiesTable.items  queryUpdate {
-			val partialResults = ArrayList<List<City>>()
-			if (filterByName) partialResults.add(fetchCitiesByName(filter.textFilter))
-			if (filterByPostalCode) partialResults.add(fetchCitiesByPostalCode(citiesPostalCodeField.text))
-			if (filterByCountry) partialResults.add(fetchCountryByAbbreviation(filter.valueFilters[SearchFilter.countryKey]!!)?.states?.flatMap { it.cities } ?: listOf())
-			if (filterByState) partialResults.add(fetchStateByAbbreviation(filter.valueFilters[SearchFilter.stateKey]!!)?.cities ?: listOf())
-			if (partialResults.isEmpty()) partialResults.add(fetchAllCities())
+		citiesTable.items queryUpdate {
+			val cities = ArrayList<List<City>>()
+			if (!filter.textFilter.isNullOrBlank()) cities.add(fetchCitiesByName(filter.textFilter))
+			if (!citiesPostalCodeField.text.isNullOrBlank()) cities.add(fetchCitiesByPostalCode(citiesPostalCodeField.text))
+			if (cities.isEmpty()) cities.add(fetchAllCities())
 
-			partialResults.reduce { a, b -> a intersectList b }.map { FXCity(it) }
+			var cityFilter = { c: City -> true }
+			for ((key, flt) in filter.valueFilters)
+				when (key) {
+					SearchFilter.countryKey -> cityFilter = cityFilter.and { it.country.abbreviation == flt }
+					SearchFilter.stateKey   -> cityFilter = cityFilter.and { val (country, state) = flt.splitPair('-'); it.country.abbreviation == country && it.state?.abbreviation == state }
+					else                    -> throw NoSuchElementException("The filter '$key' is not available for cities.")
+				}
+
+			cities.reduce { a, b -> a intersectList b }.filter(cityFilter).map { FXCity(it) }
 		}
 	}
 
 	/**
 	 * Applies a special filter to the state table.
 	 *
-	 * @param country country to filter states by
+	 * @param filter filter to apply to the states table
 	 */
-	fun filterStates(country: Country? = null) {
+	fun filterStates(filter: Any? = null) {
 
-		val filter = statesSearchField.text.filter
-		if (country !== null)
-			filter.valueFilters.put(SearchFilter.countryKey, country.abbreviation)
+		val searchFilter = statesSearchField.text.filter
+		if (filter is Country)
+			searchFilter.valueFilters.put(SearchFilter.countryKey, filter.abbreviation)
+		else
+			throw IllegalArgumentException("The filter of type '${filter?.javaClass}' is not available for states.")
 
-		statesSearchField.text = filter.combined
+		statesSearchField.text = searchFilter.combined
 
 		tabPane.selectionModel.select(statesTab)
 		searchStates()
@@ -333,18 +327,17 @@ class FXWindow : Initializable {
 	fun searchStates(event: KeyEvent? = null) {
 
 		val filter = statesSearchField.text.filter
-		val filterByName = !filter.textFilter.isNullOrBlank()
-		val filterByCountry = filter.valueFilters.containsKey(SearchFilter.countryKey)
 
 		statesTable.items queryUpdate {
-			val filterCountryResult = (if (filterByCountry) fetchCountryByAbbreviation(filter.valueFilters[SearchFilter.countryKey] ?: "?")?.states else null) ?: listOf()
+			var states = if (!filter.textFilter.isNullOrBlank()) fetchStatesByName(filter.textFilter) else fetchAllStates()
 
-			when {
-				filterByName && filterByCountry -> fetchStatesByName(filter.textFilter) intersectList filterCountryResult
-				filterByName                    -> fetchStatesByName(filter.textFilter)
-				filterByCountry                 -> filterCountryResult
-				else                            -> fetchAllStates()
-			}.map { FXState(it) }
+			for ((key, flt) in filter.valueFilters)
+				when (key) {
+					SearchFilter.countryKey -> states = states.filter { it.country.abbreviation == flt }
+					else                    -> throw NoSuchElementException("The filter '$key' is not available for states.")
+				}
+
+			states.map { FXState(it) }
 		}
 	}
 
@@ -355,11 +348,12 @@ class FXWindow : Initializable {
 	 */
 	fun searchCountries(event: KeyEvent? = null) {
 
+		val filter = countriesSearchField.text.filter
+		if (filter.valueFilters.isNotEmpty())
+			throw NoSuchElementException("No filters are available for countries.")
+
 		countriesTable.items queryUpdate {
-			when {
-				!countriesSearchField.text.isNullOrBlank() -> fetchCountriesByName(countriesSearchField.text)
-				else                                       -> fetchAllCountries()
-			}.map { FXCountry(it) }
+			(if (!filter.textFilter.isNullOrBlank()) fetchCountriesByName(filter.textFilter) else fetchAllCountries()).map { FXCountry(it) }
 		}
 	}
 

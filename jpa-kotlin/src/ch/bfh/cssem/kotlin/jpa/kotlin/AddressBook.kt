@@ -108,6 +108,13 @@ class AddressBook : ApiAddressBook {
 	 */
 	protected fun <E : PersistentEntity> remove(entity: E) = entityManager.transact { remove(entity) }
 
+	/**
+	 * Casts an entity to the desired type or throws an [IllegalArgumentException].
+	 *
+	 * @param entity entity to cast
+	 */
+	protected fun <E : PersistentEntity> cast(entity: Any) = entity as? E ?: throw IllegalArgumentException("Cannot pass instance from different implementation.")
+
 	override fun fetchAllPeople() = findByQuery<Person>(Person.findAll)
 
 	override fun fetchPeopleByName(filter: String) = findByQuery<Person>(Person.findByName, mapOf("name" to filter.makeFilter()))
@@ -136,27 +143,27 @@ class AddressBook : ApiAddressBook {
 
 	override fun createPerson(lastName: String, firstName: String) = Person(lastName, firstName)
 
-	override fun createCity(name: String, postalCode: String, state: ApiState, country: ApiCountry) = City(name, postalCode, state as State, country as Country)
+	override fun createCity(name: String, postalCode: String, state: ApiState, country: ApiCountry) = City(name, postalCode, cast(state), cast(country))
 
-	override fun createState(abbreviation: String, name: String, country: ApiCountry) = State(abbreviation, name, country as Country)
+	override fun createState(abbreviation: String, name: String, country: ApiCountry) = State(abbreviation, name, cast(country))
 
 	override fun createCountry(abbreviation: String, name: String) = Country(abbreviation, name)
 
-	override fun storePerson(person: ApiPerson) = persistMerge(person as Person)
+	override fun storePerson(person: ApiPerson) = persistMerge(cast<Person>(person))
 
-	override fun storeCity(city: ApiCity) = persistMerge(city as City)
+	override fun storeCity(city: ApiCity) = persistMerge(cast<City>(city))
 
-	override fun storeState(state: ApiState) = persistMerge(state as State)
+	override fun storeState(state: ApiState) = persistMerge(cast<State>(state))
 
-	override fun storeCountry(country: ApiCountry) = persistMerge(country as Country)
+	override fun storeCountry(country: ApiCountry) = persistMerge(cast<Country>(country))
 
-	override fun removePerson(person: ApiPerson) = remove(person as Person)
+	override fun removePerson(person: ApiPerson) = remove(cast<Person>(person))
 
-	override fun removeCity(city: ApiCity) = remove(city as City)
+	override fun removeCity(city: ApiCity) = remove(cast<City>(city))
 
-	override fun removeState(state: ApiState) = remove(state as State)
+	override fun removeState(state: ApiState) = remove(cast<State>(state))
 
-	override fun removeCountry(country: ApiCountry) = remove(country as Country)
+	override fun removeCountry(country: ApiCountry) = remove(cast<Country>(country))
 
 	companion object {
 
@@ -172,7 +179,7 @@ class AddressBook : ApiAddressBook {
  *
  * @param operation operation to run inside a transaction
  */
-inline fun <T> EntityManager.transact(operation: EntityManager.() -> T): T {
+private inline fun <T> EntityManager.transact(operation: EntityManager.() -> T): T {
 
 	with (transaction) {
 		try {
@@ -188,3 +195,37 @@ inline fun <T> EntityManager.transact(operation: EntityManager.() -> T): T {
 		}
 	}
 }
+
+//private inline fun <T> EntityManager.transact(operation: EntityManager.() -> T): T {
+//
+//	try {
+//		transaction.begin()
+//		val result = operation()
+//		transaction.commit()
+//
+//		return result
+//
+//	} catch (ex: Exception) {
+//		transaction.rollback()
+//		throw PersistenceException("Could not successfully complete transaction.", ex)
+//
+//	} finally {
+//		println("This message will always be printed.")
+//	}
+//}
+
+//private inline fun <T> EntityManager.transact(operation: EntityManager.() -> T): T? {
+//
+//	return try {
+//		transaction.begin()
+//		val result = operation()
+//		transaction.commit()
+//
+//		result
+//
+//	} catch (ex: Exception) {
+//		transaction.rollback()
+//
+//		null
+//	}
+//}

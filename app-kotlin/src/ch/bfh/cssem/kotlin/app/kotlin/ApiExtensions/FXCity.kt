@@ -5,7 +5,7 @@ import ch.bfh.cssem.kotlin.api.City
 /**
  * Special JavaFX implementation of the interface [City].
  *
- * @property impl                concrete implementation of the interface
+ * @property implementation      concrete implementation of the interface
  * @property stateAbbreviation   the state's abbreviation
  * @property stateName           the state's name
  * @property countryAbbreviation the country's abbreviation
@@ -14,7 +14,7 @@ import ch.bfh.cssem.kotlin.api.City
  *
  * @author strut1 & touwm1
  */
-class FXCity(val impl: City) : City by impl {
+class FXCity(val implementation: City) : City by implementation {
 
 	val stateAbbreviation: String?
 		get() = state?.abbreviation
