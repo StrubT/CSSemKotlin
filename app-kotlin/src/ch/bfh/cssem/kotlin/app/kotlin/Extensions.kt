@@ -19,11 +19,13 @@ infix fun <T> List<T>.intersectList(other: List<T>): List<T> {
 /**
  * Turns a list into a pair.
  */
+@Throws(IllegalArgumentException::class)
 fun <T> List<T>.makePair(): Pair<T, T> = if (size == 2) Pair(get(0), get(1)) else throw IllegalArgumentException("There must be exactly two elements to make a pair.")
 
 /**
  * Turns a list into a triple.
  */
+@Throws(IllegalArgumentException::class)
 fun <T> List<T>.makeTriple(): Triple<T, T, T> = if (size == 3) Triple(get(0), get(1), get(2)) else throw IllegalArgumentException("There must be exactly three elements to make a triple.")
 
 /**
@@ -33,6 +35,7 @@ fun <T> List<T>.makeTriple(): Triple<T, T, T> = if (size == 3) Triple(get(0), ge
  * @param ignoreCase `true` to ignore character case when matching a delimiter. By default `false`.
  * @param limit      The maximum number of substrings to return. Zero by default means no limit is set.
  */
+@JvmOverloads
 fun CharSequence.splitPair(vararg delimiters: String, ignoreCase: Boolean = false, limit: Int = 0) = split(*delimiters, ignoreCase = ignoreCase, limit = limit).makePair()
 
 /**
@@ -42,6 +45,7 @@ fun CharSequence.splitPair(vararg delimiters: String, ignoreCase: Boolean = fals
  * @param ignoreCase `true` to ignore character case when matching a delimiter. By default `false`.
  * @param limit      The maximum number of substrings to return.
  */
+@JvmOverloads
 fun CharSequence.splitPair(vararg delimiters: Char, ignoreCase: Boolean = false, limit: Int = 0) = split(*delimiters, ignoreCase = ignoreCase, limit = limit).makePair()
 
 /**
@@ -49,6 +53,7 @@ fun CharSequence.splitPair(vararg delimiters: Char, ignoreCase: Boolean = false,
  *
  * @param limit Non-negative value specifying the maximum number of substrings to return.
  */
+@JvmOverloads
 fun CharSequence.splitPair(regex: Regex, limit: Int = 0) = split(regex, limit).makePair()
 
 /**
@@ -58,6 +63,7 @@ fun CharSequence.splitPair(regex: Regex, limit: Int = 0) = split(regex, limit).m
  * @param ignoreCase `true` to ignore character case when matching a delimiter. By default `false`.
  * @param limit      The maximum number of substrings to return. Zero by default means no limit is set.
  */
+@JvmOverloads
 fun CharSequence.splitTriple(vararg delimiters: String, ignoreCase: Boolean = false, limit: Int = 0) = split(*delimiters, ignoreCase = ignoreCase, limit = limit).makeTriple()
 
 /**
@@ -67,6 +73,7 @@ fun CharSequence.splitTriple(vararg delimiters: String, ignoreCase: Boolean = fa
  * @param ignoreCase `true` to ignore character case when matching a delimiter. By default `false`.
  * @param limit      The maximum number of substrings to return.
  */
+@JvmOverloads
 fun CharSequence.splitTriple(vararg delimiters: Char, ignoreCase: Boolean = false, limit: Int = 0) = split(*delimiters, ignoreCase = ignoreCase, limit = limit).makeTriple()
 
 /**
@@ -74,6 +81,7 @@ fun CharSequence.splitTriple(vararg delimiters: Char, ignoreCase: Boolean = fals
  *
  * @param limit Non-negative value specifying the maximum number of substrings to return.
  */
+@JvmOverloads
 fun CharSequence.splitTriple(regex: Regex, limit: Int = 0) = split(regex, limit).makeTriple()
 
 /**
