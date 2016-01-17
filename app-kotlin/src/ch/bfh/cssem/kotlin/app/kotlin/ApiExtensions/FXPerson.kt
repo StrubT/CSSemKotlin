@@ -78,12 +78,27 @@ open class FXPerson(val implementation: Person) : Person by implementation {
 		get() = listOf(phoneHome, phoneMobile, phoneWork).filter { it !== null && it.length > 0 }.joinToString(separator = " / ")
 }
 
+/**
+ * Internationalised extensions for [FXPerson].
+ *
+ * @author strut1 & touwm1
+ */
 sealed class FXPersonI18n(implementation: Person) : FXPerson(implementation) {
 
+	/**
+	 * Internationalised extension for [FXPerson] for Switzerland.
+	 *
+	 * @author strut1 & touwm1
+	 */
 	class CH(implementation: Person) : FXPersonI18n(implementation)
 
-	class AT(implementation: Person) : DE(implementation)
-	class FR(implementation: Person) : DE(implementation, true)
+	/**
+	 * Internationalised extension for [FXPerson] for Germany.
+	 *
+	 * @property upperCaseCity whether or not to write the city upper case
+	 *
+	 * @author strut1 & touwm1
+	 */
 	open class DE(implementation: Person, val upperCaseCity: Boolean = false) : FXPersonI18n(implementation) {
 
 		override val address: String?
@@ -105,6 +120,25 @@ sealed class FXPersonI18n(implementation: Person) : FXPerson(implementation) {
 			}
 	}
 
+	/**
+	 * Internationalised extension for [FXPerson] for Austria.
+	 *
+	 * @author strut1 & touwm1
+	 */
+	class AT(implementation: Person) : DE(implementation)
+
+	/**
+	 * Internationalised extension for [FXPerson] for France.
+	 *
+	 * @author strut1 & touwm1
+	 */
+	class FR(implementation: Person) : DE(implementation, true)
+
+	/**
+	 * Internationalised extension for [FXPerson] for the United Kingdom of Gread Britain and Northern Ireland.
+	 *
+	 * @author strut1 & touwm1
+	 */
 	class UK(implementation: Person) : FXPersonI18n(implementation) {
 
 		override val address: String?
@@ -126,7 +160,13 @@ sealed class FXPersonI18n(implementation: Person) : FXPerson(implementation) {
 			}
 	}
 
-	class US_USPS(implementation: Person) : US(implementation, true)
+	/**
+	 * Internationalised extension for [FXPerson] for the United States of America.
+	 *
+	 * @property upperCase whether or not to write the information upper case
+	 *
+	 * @author strut1 & touwm1
+	 */
 	open class US(implementation: Person, val upperCase: Boolean = false) : FXPersonI18n(implementation) {
 
 		override val address: String?
@@ -153,4 +193,11 @@ sealed class FXPersonI18n(implementation: Person) : FXPerson(implementation) {
 				return sb.toString()
 			}
 	}
+
+	/**
+	 * Internationalised extension for [FXPerson] for the United States of America as recommened by US Postal Service.
+	 *
+	 * @author strut1 & touwm1
+	 */
+	class US_USPS(implementation: Person) : US(implementation, true)
 }

@@ -31,7 +31,7 @@ class AddressBook : ApiAddressBook {
 	 *
 	 * @return the [PersistentEntity] with the specified unique identifier; or null, if none
 	 */
-	protected inline fun <reified E : PersistentEntity> findById(id: Int?): E? = entityManager.find(E::class.java, id)
+	protected inline fun <reified E : PersistentEntity> findById(id: Int): E? = entityManager.find(E::class.java, id)
 
 	/**
 	 * Finds all [PersistentEntities][PersistentEntity] in the [entityManager].
